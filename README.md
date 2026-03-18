@@ -1,15 +1,15 @@
 # Superscale
 
-AI image upscaling for Apple Silicon, powered by CoreML and Real-ESRGAN.
+Fast AI image upscaling for Mac. Takes a low-resolution image and produces a sharp, detailed version at 2× or 4× the original size.
 
-Superscale converts Real-ESRGAN neural network models to CoreML format and runs them natively on Apple Silicon — using the Neural Engine and GPU rather than CPU. A 1024×1024 image at 4× scale completes in seconds, not minutes.
+Built natively for Apple Silicon — runs on the Neural Engine rather than CPU, so a 1024×1024 image upscales in seconds, not minutes.
 
-## What it does
+## Features
 
-1. **Upscales images** using Real-ESRGAN models via Apple's CoreML framework
-2. **Runs on the Neural Engine** — dedicated AI hardware on M-series chips
-3. **Zero Python at runtime** — pure Swift CLI, no venv, no pip, no PyTorch
-4. **Ships as a single binary** plus model files, installable via Homebrew
+- **2× and 4× upscaling** with multiple models optimized for photos, illustrations, and anime
+- **Batch processing** — upscale entire directories of images
+- **Fast** — uses Apple's Neural Engine hardware, not CPU
+- **No dependencies** — single binary, installable via Homebrew
 
 ## Quickstart
 
