@@ -23,6 +23,7 @@ The Real-ESRGAN repository is licensed under **BSD-3-Clause** (Copyright 2021, X
 | realesr-animevideov3 | 4× | BSD-3-Clause | Yes, with attribution |
 | realesr-general-x4v3 | 4× | BSD-3-Clause | Yes, with attribution |
 | realesr-general-wdn-x4v3 | 4× | BSD-3-Clause | Yes, with attribution |
+| GFPGAN (face enhancement) | n/a | Apache-2.0, but weights contain non-commercial components (StyleGAN2, DFDNet) | **No** — available as optional user download only. See [excluded models](#excluded-models) below. |
 
 ### Training data note
 
