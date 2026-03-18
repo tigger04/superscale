@@ -1,4 +1,4 @@
-<!-- Version: 0.4 | Last updated: 2026-03-18 -->
+<!-- Version: 0.5 | Last updated: 2026-03-18 -->
 
 # Implementation plan
 
@@ -6,63 +6,68 @@
 
 Delivery is phased. Each phase produces a working, testable increment. Phases are sequential unless noted otherwise.
 
-## Issue index
+## Execution order
 
-| Phase | Issue | Description |
-|-------|-------|-------------|
-| 1 | [#3](https://github.com/tigger04/superscale/issues/3) | CoreML model conversion |
-| 2 | [#4](https://github.com/tigger04/superscale/issues/4) | Proof of concept |
-| 3 | [#11](https://github.com/tigger04/superscale/issues/11) | CLI implementation (tracking) |
-| 3a | [#6](https://github.com/tigger04/superscale/issues/6) | Image I/O |
-| 3b | [#7](https://github.com/tigger04/superscale/issues/7) | Tiling engine |
-| 3c | [#8](https://github.com/tigger04/superscale/issues/8) | CoreML inference + model registry |
-| 3d | [#9](https://github.com/tigger04/superscale/issues/9) | Pipeline integration |
-| 3e | [#10](https://github.com/tigger04/superscale/issues/10) | CLI polish |
-| 4 | [#5](https://github.com/tigger04/superscale/issues/5) | Licensing review |
-| 5 | [#12](https://github.com/tigger04/superscale/issues/12) | Distribution (Homebrew) |
-| 6 | [#13](https://github.com/tigger04/superscale/issues/13) | Model download (on-demand) |
-| 7 | [#1](https://github.com/tigger04/superscale/issues/1) | Face enhancement (GFPGAN) |
-| 8 | [#14](https://github.com/tigger04/superscale/issues/14) | macOS SwiftUI GUI |
-| 9 | [#15](https://github.com/tigger04/superscale/issues/15) | macOS App Store |
-| 10 | [#16](https://github.com/tigger04/superscale/issues/16) | iOS app |
-| 11 | [#17](https://github.com/tigger04/superscale/issues/17) | iOS App Store |
-| — | [#2](https://github.com/tigger04/superscale/issues/2) | Model storage strategy (cross-cutting, user-side) |
-| — | [#18](https://github.com/tigger04/superscale/issues/18) | Model artefact management (cross-cutting, build/release-side) |
+Issues should be tackled in this order. Where multiple issues share a step number, they can be worked in parallel.
+
+| Step | Issue | Description | Depends on |
+|------|-------|-------------|------------|
+| 1 | [#2](https://github.com/tigger04/superscale/issues/2) | Model storage strategy (decision) | — |
+| 1 | [#3](https://github.com/tigger04/superscale/issues/3) | Phase 1: CoreML model conversion | — |
+| 2 | [#18](https://github.com/tigger04/superscale/issues/18) | Model artefact management (sync, release) | #2, #3 |
+| 2 | [#4](https://github.com/tigger04/superscale/issues/4) | Phase 2: Proof of concept | #3 |
+| 3 | [#6](https://github.com/tigger04/superscale/issues/6) | Phase 3a: Image I/O | #4 |
+| 3 | [#7](https://github.com/tigger04/superscale/issues/7) | Phase 3b: Tiling engine | #4 |
+| 3 | [#8](https://github.com/tigger04/superscale/issues/8) | Phase 3c: CoreML inference + model registry | #4 |
+| 4 | [#9](https://github.com/tigger04/superscale/issues/9) | Phase 3d: Pipeline integration | #6, #7, #8 |
+| 5 | [#10](https://github.com/tigger04/superscale/issues/10) | Phase 3e: CLI polish | #9 |
+| 6 | [#5](https://github.com/tigger04/superscale/issues/5) | Phase 4: Licensing review | — (gate before #12) |
+| 7 | [#12](https://github.com/tigger04/superscale/issues/12) | Phase 5: Distribution (Homebrew) | #5, #10, #18 |
+| 8 | [#13](https://github.com/tigger04/superscale/issues/13) | Phase 6: Model download (on-demand) | #12 |
+| 9 | [#1](https://github.com/tigger04/superscale/issues/1) | Phase 7: Face enhancement (GFPGAN) | #11 |
+| 10 | [#14](https://github.com/tigger04/superscale/issues/14) | Phase 8: macOS SwiftUI GUI | #11 |
+| 11 | [#15](https://github.com/tigger04/superscale/issues/15) | Phase 9: macOS App Store | #14 |
+| 11 | [#16](https://github.com/tigger04/superscale/issues/16) | Phase 10: iOS app | #14 |
+| 12 | [#17](https://github.com/tigger04/superscale/issues/17) | Phase 11: iOS App Store | #16 |
+
+[#11](https://github.com/tigger04/superscale/issues/11) is the Phase 3 tracking issue — it is complete when #6–#10 are all closed.
 
 ## Roadmap
 
 ```
-Phase 1: Model conversion (#3)
-    │
-    ▼
-Phase 2: Proof of concept (#4)
-    │
-    ▼
-Phase 3: CLI implementation (#11, sub-issues: #6–#10)
-    │
-    ▼
-Phase 4: Licensing review (#5)  ◀── gate: must complete before going public
-    │
-    ▼
-Phase 5: Distribution (#12)
-    │
-    ▼
-Phase 6: Model download (#13)
-    │
-    ▼
-Phase 7: Face enhancement (#1)
-    │
-    ▼
-Phase 8: macOS SwiftUI GUI (#14)
-    │
-    ▼
-Phase 9: macOS App Store (#15)
-    │
-    ▼
-Phase 10: iOS app (#16)
-    │
-    ▼
-Phase 11: iOS App Store (#17)
+#2 Model storage decision ──┐
+                             │
+#3 Phase 1: Model conversion─┤
+    │                        │
+    ├──▶ #4  Phase 2: PoC   │
+    │        │               │
+    │        ├──▶ #6  3a: Image I/O  ──┐
+    │        ├──▶ #7  3b: Tiling  ─────┤
+    │        └──▶ #8  3c: Inference  ──┤
+    │                                  │
+    │                    #9  3d: Pipeline integration
+    │                                  │
+    │                    #10 3e: CLI polish
+    │                                  │
+    └──▶ #18 Model artefact mgmt ─────┤
+                                       │
+              #5  Phase 4: Licensing ──┤
+                                       │
+                         #12 Phase 5: Distribution
+                                       │
+                         #13 Phase 6: Model download
+                                       │
+                         #1  Phase 7: Face enhancement
+                                       │
+                         #14 Phase 8: macOS GUI
+                               │       │
+                               │       ▼
+                               │  #15 Phase 9: macOS App Store
+                               │
+                               └──▶ #16 Phase 10: iOS app
+                                        │
+                                        ▼
+                                   #17 Phase 11: iOS App Store
 ```
 
 ---
@@ -311,6 +316,7 @@ Licensing is a gate — it must be resolved before distribution (Phase 5). The p
 | 0.2 | 2026-03-18 | Expanded to 11 phases: added proof of concept, face enhancement, licensing, App Store, and iOS phases |
 | 0.3 | 2026-03-18 | Reordered: licensing (Phase 4) now gates distribution (Phase 5). Broke Phase 3 into sub-phases (3a–3e). Removed PyTorch comparison from Phase 2. Added model storage strategy cross-reference. |
 | 0.4 | 2026-03-18 | Added issue index and linked all phases to GitHub issues (#1–#17). Allocated test IDs RT-008–RT-031 and UT-001–UT-006. |
+| 0.5 | 2026-03-18 | Replaced issue index with execution order table showing dependencies. Integrated #2 and #18 into roadmap. Added dependency graph. |
 
 ## See also
 
