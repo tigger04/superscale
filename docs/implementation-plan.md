@@ -1,4 +1,4 @@
-<!-- Version: 0.3 | Last updated: 2026-03-18 -->
+<!-- Version: 0.4 | Last updated: 2026-03-18 -->
 
 # Implementation plan
 
@@ -6,45 +6,67 @@
 
 Delivery is phased. Each phase produces a working, testable increment. Phases are sequential unless noted otherwise.
 
+## Issue index
+
+| Phase | Issue | Description |
+|-------|-------|-------------|
+| 1 | [#3](https://github.com/tigger04/superscale/issues/3) | CoreML model conversion |
+| 2 | [#4](https://github.com/tigger04/superscale/issues/4) | Proof of concept |
+| 3 | [#11](https://github.com/tigger04/superscale/issues/11) | CLI implementation (tracking) |
+| 3a | [#6](https://github.com/tigger04/superscale/issues/6) | Image I/O |
+| 3b | [#7](https://github.com/tigger04/superscale/issues/7) | Tiling engine |
+| 3c | [#8](https://github.com/tigger04/superscale/issues/8) | CoreML inference + model registry |
+| 3d | [#9](https://github.com/tigger04/superscale/issues/9) | Pipeline integration |
+| 3e | [#10](https://github.com/tigger04/superscale/issues/10) | CLI polish |
+| 4 | [#5](https://github.com/tigger04/superscale/issues/5) | Licensing review |
+| 5 | [#12](https://github.com/tigger04/superscale/issues/12) | Distribution (Homebrew) |
+| 6 | [#13](https://github.com/tigger04/superscale/issues/13) | Model download (on-demand) |
+| 7 | [#1](https://github.com/tigger04/superscale/issues/1) | Face enhancement (GFPGAN) |
+| 8 | [#14](https://github.com/tigger04/superscale/issues/14) | macOS SwiftUI GUI |
+| 9 | [#15](https://github.com/tigger04/superscale/issues/15) | macOS App Store |
+| 10 | [#16](https://github.com/tigger04/superscale/issues/16) | iOS app |
+| 11 | [#17](https://github.com/tigger04/superscale/issues/17) | iOS App Store |
+| — | [#2](https://github.com/tigger04/superscale/issues/2) | Model storage strategy (cross-cutting) |
+
 ## Roadmap
 
 ```
-Phase 1: Model conversion
+Phase 1: Model conversion (#3)
     │
     ▼
-Phase 2: Proof of concept
+Phase 2: Proof of concept (#4)
     │
     ▼
-Phase 3: CLI implementation (sub-issues: 3a–3e)
+Phase 3: CLI implementation (#11, sub-issues: #6–#10)
     │
     ▼
-Phase 4: Licensing review  ◀── gate: must complete before going public
+Phase 4: Licensing review (#5)  ◀── gate: must complete before going public
     │
     ▼
-Phase 5: Distribution (Homebrew, public repo)
+Phase 5: Distribution (#12)
     │
     ▼
-Phase 6: Model download (on-demand)
+Phase 6: Model download (#13)
     │
     ▼
-Phase 7: Face enhancement (GFPGAN)
+Phase 7: Face enhancement (#1)
     │
     ▼
-Phase 8: macOS SwiftUI GUI
+Phase 8: macOS SwiftUI GUI (#14)
     │
     ▼
-Phase 9: macOS App Store
+Phase 9: macOS App Store (#15)
     │
     ▼
-Phase 10: iOS app
+Phase 10: iOS app (#16)
     │
     ▼
-Phase 11: iOS App Store
+Phase 11: iOS App Store (#17)
 ```
 
 ---
 
-## Phase 1: CoreML model conversion
+## Phase 1: CoreML model conversion — [#3](https://github.com/tigger04/superscale/issues/3)
 
 **Goal:** Convert RealESRGAN_x4plus (the default model) from PyTorch to CoreML and validate that the conversion works.
 
@@ -63,7 +85,7 @@ Phase 11: iOS App Store
 
 ---
 
-## Phase 2: Proof of concept
+## Phase 2: Proof of concept — [#4](https://github.com/tigger04/superscale/issues/4)
 
 **Goal:** Prove that a CoreML-converted model can upscale an image in Swift and that the output quality is acceptable.
 
@@ -79,37 +101,37 @@ Phase 11: iOS App Store
 
 ---
 
-## Phase 3: CLI implementation
+## Phase 3: CLI implementation — [#11](https://github.com/tigger04/superscale/issues/11)
 
 **Goal:** A complete, usable CLI that upscales images using CoreML.
 
-This is the largest phase. It will be broken into sub-issues when implementation begins:
+This is the largest phase, tracked via sub-issues:
 
-### Phase 3a: Image I/O
+### Phase 3a: Image I/O — [#6](https://github.com/tigger04/superscale/issues/6)
 
 - **ImageLoader** — read input images (PNG, JPEG, TIFF, HEIC) via CGImage
 - **ImageWriter** — write output preserving colour profile
 - Alpha channel extraction and recombination
 
-### Phase 3b: Tiling engine
+### Phase 3b: Tiling engine — [#7](https://github.com/tigger04/superscale/issues/7)
 
 - **Tiler** — split large images into overlapping tiles of configurable size
 - Stitch upscaled tiles with overlap blending
 - Configurable tile size (`--tile-size`)
 
-### Phase 3c: CoreML inference
+### Phase 3c: CoreML inference — [#8](https://github.com/tigger04/superscale/issues/8)
 
 - **CoreMLInference** — load `.mlpackage`, run prediction per tile
 - **ModelRegistry** — catalogue of supported models with metadata
 - Model resolution (bundled, user path, download)
 
-### Phase 3d: Pipeline integration
+### Phase 3d: Pipeline integration — [#9](https://github.com/tigger04/superscale/issues/9)
 
 - Wire Image I/O → Tiler → Inference → Tiler → Image I/O
 - Progress reporting to stderr (tile N of M)
 - Error handling with clear messages
 
-### Phase 3e: CLI polish
+### Phase 3e: CLI polish — [#10](https://github.com/tigger04/superscale/issues/10)
 
 - Batch processing — multiple input files, directory input
 - All CLI flags working end-to-end
@@ -121,7 +143,7 @@ This is the largest phase. It will be broken into sub-issues when implementation
 
 ---
 
-## Phase 4: Licensing review
+## Phase 4: Licensing review — [#5](https://github.com/tigger04/superscale/issues/5)
 
 **Goal:** Finalise the project licence before going public.
 
@@ -142,7 +164,7 @@ Licensing is a gate — it must be resolved before distribution (Phase 5). The p
 
 ---
 
-## Phase 5: Distribution
+## Phase 5: Distribution — [#12](https://github.com/tigger04/superscale/issues/12)
 
 **Goal:** Homebrew formula, release automation, public-ready packaging.
 
@@ -162,7 +184,7 @@ Licensing is a gate — it must be resolved before distribution (Phase 5). The p
 
 ---
 
-## Phase 6: Model download
+## Phase 6: Model download — [#13](https://github.com/tigger04/superscale/issues/13)
 
 **Goal:** Support models that aren't bundled, downloaded on demand.
 
@@ -179,7 +201,7 @@ Licensing is a gate — it must be resolved before distribution (Phase 5). The p
 
 ---
 
-## Phase 7: Face enhancement (GFPGAN)
+## Phase 7: Face enhancement (GFPGAN) — [#1](https://github.com/tigger04/superscale/issues/1)
 
 **Goal:** Optional GFPGAN face enhancement as a user-initiated download.
 
@@ -200,7 +222,7 @@ Licensing is a gate — it must be resolved before distribution (Phase 5). The p
 
 ---
 
-## Phase 8: macOS SwiftUI GUI
+## Phase 8: macOS SwiftUI GUI — [#14](https://github.com/tigger04/superscale/issues/14)
 
 **Goal:** A native macOS app for drag-and-drop image upscaling.
 
@@ -221,7 +243,7 @@ Licensing is a gate — it must be resolved before distribution (Phase 5). The p
 
 ---
 
-## Phase 9: macOS App Store
+## Phase 9: macOS App Store — [#15](https://github.com/tigger04/superscale/issues/15)
 
 **Goal:** Distribute the macOS GUI via the Mac App Store.
 
@@ -242,7 +264,7 @@ Licensing is a gate — it must be resolved before distribution (Phase 5). The p
 
 ---
 
-## Phase 10: iOS app
+## Phase 10: iOS app — [#16](https://github.com/tigger04/superscale/issues/16)
 
 **Goal:** Bring Superscale to iPhone and iPad.
 
@@ -262,7 +284,7 @@ Licensing is a gate — it must be resolved before distribution (Phase 5). The p
 
 ---
 
-## Phase 11: iOS App Store
+## Phase 11: iOS App Store — [#17](https://github.com/tigger04/superscale/issues/17)
 
 **Goal:** Distribute the iOS app via the App Store.
 
@@ -287,6 +309,7 @@ Licensing is a gate — it must be resolved before distribution (Phase 5). The p
 | 0.1 | 2026-03-18 | Initial 5-phase plan |
 | 0.2 | 2026-03-18 | Expanded to 11 phases: added proof of concept, face enhancement, licensing, App Store, and iOS phases |
 | 0.3 | 2026-03-18 | Reordered: licensing (Phase 4) now gates distribution (Phase 5). Broke Phase 3 into sub-phases (3a–3e). Removed PyTorch comparison from Phase 2. Added model storage strategy cross-reference. |
+| 0.4 | 2026-03-18 | Added issue index and linked all phases to GitHub issues (#1–#17). Allocated test IDs RT-008–RT-031 and UT-001–UT-006. |
 
 ## See also
 
