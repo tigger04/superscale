@@ -1,4 +1,4 @@
-<!-- Version: 0.2 | Last updated: 2026-03-18 -->
+<!-- Version: 0.3 | Last updated: 2026-03-18 -->
 
 # Implementation plan
 
@@ -9,31 +9,37 @@ Delivery is phased. Each phase produces a working, testable increment. Phases ar
 ## Roadmap
 
 ```
-Phase 1: Model conversion ─▶ Phase 2: Proof of concept ─▶ Phase 3: CLI
-    │                                                          │
-    │                                                          ▼
-    │                                                    Phase 4: Distribution
-    │                                                          │
-    │                                                          ▼
-    │                                                    Phase 5: Model download
-    │                                                          │
-    │                                                          ▼
-    │                                                    Phase 6: Face enhancement
-    │                                                          │
-    │                                                          ▼
-    │                                                    Phase 7: Licensing
-    │                                                          │
-    │                                                          ▼
-    │                                                    Phase 8: macOS GUI
-    │                                                          │
-    │                                                          ▼
-    │                                                    Phase 9: macOS App Store
-    │                                                          │
-    │                                                          ▼
-    │                                                    Phase 10: iOS app
-    │                                                          │
-    │                                                          ▼
-    │                                                    Phase 11: iOS App Store
+Phase 1: Model conversion
+    │
+    ▼
+Phase 2: Proof of concept
+    │
+    ▼
+Phase 3: CLI implementation (sub-issues: 3a–3e)
+    │
+    ▼
+Phase 4: Licensing review  ◀── gate: must complete before going public
+    │
+    ▼
+Phase 5: Distribution (Homebrew, public repo)
+    │
+    ▼
+Phase 6: Model download (on-demand)
+    │
+    ▼
+Phase 7: Face enhancement (GFPGAN)
+    │
+    ▼
+Phase 8: macOS SwiftUI GUI
+    │
+    ▼
+Phase 9: macOS App Store
+    │
+    ▼
+Phase 10: iOS app
+    │
+    ▼
+Phase 11: iOS App Store
 ```
 
 ---
@@ -63,13 +69,13 @@ Phase 1: Model conversion ─▶ Phase 2: Proof of concept ─▶ Phase 3: CLI
 
 **Tasks:**
 1. Minimal Swift script that loads the `.mlpackage` and runs a single small image through it
-2. Compare output against PyTorch reference (visual inspection + PSNR > 40 dB)
-3. Measure inference time on Apple Silicon (Neural Engine vs CPU baseline)
+2. Visual inspection of output quality (correct resolution, no artefacts, sharp detail)
+3. Measure inference time on Apple Silicon (target: 1024×1024 at 4× in under 30 seconds on M3 Air)
 4. Document any quality or compatibility issues
 
-**Artefacts:** Working proof of concept. Benchmark numbers. Quality comparison images.
+**Artefacts:** Working proof of concept. Benchmark numbers. Sample output images.
 
-**Milestone:** One image successfully upscaled via CoreML with acceptable quality and meaningful speedup over PyTorch CPU.
+**Milestone:** One image successfully upscaled via CoreML with acceptable quality.
 
 ---
 
@@ -77,17 +83,37 @@ Phase 1: Model conversion ─▶ Phase 2: Proof of concept ─▶ Phase 3: CLI
 
 **Goal:** A complete, usable CLI that upscales images using CoreML.
 
-**Tasks:**
-1. ImageLoader — read input images (PNG, JPEG, TIFF, HEIC) via CGImage
-2. Tiler — split large images into overlapping tiles, stitch results with blending
-3. CoreMLInference — load model, run prediction per tile
-4. ImageWriter — write output preserving colour profile
-5. CLI flags: `-i` input, `-o` output, `-s` scale, `-m` model, `--tile-size`
-6. Batch processing — multiple input files, directory input
-7. Progress reporting to stderr (tile N of M)
-8. Alpha channel handling (bicubic interpolation, optional model pass)
-9. `--list-models`, `--help`, `--version`
-10. Error handling with clear messages
+This is the largest phase. It will be broken into sub-issues when implementation begins:
+
+### Phase 3a: Image I/O
+
+- **ImageLoader** — read input images (PNG, JPEG, TIFF, HEIC) via CGImage
+- **ImageWriter** — write output preserving colour profile
+- Alpha channel extraction and recombination
+
+### Phase 3b: Tiling engine
+
+- **Tiler** — split large images into overlapping tiles of configurable size
+- Stitch upscaled tiles with overlap blending
+- Configurable tile size (`--tile-size`)
+
+### Phase 3c: CoreML inference
+
+- **CoreMLInference** — load `.mlpackage`, run prediction per tile
+- **ModelRegistry** — catalogue of supported models with metadata
+- Model resolution (bundled, user path, download)
+
+### Phase 3d: Pipeline integration
+
+- Wire Image I/O → Tiler → Inference → Tiler → Image I/O
+- Progress reporting to stderr (tile N of M)
+- Error handling with clear messages
+
+### Phase 3e: CLI polish
+
+- Batch processing — multiple input files, directory input
+- All CLI flags working end-to-end
+- `--list-models`, `--help`, `--version` (scaffolded, needs wiring)
 
 **Artefacts:** Working `superscale` binary. Test suite for each component.
 
@@ -95,16 +121,40 @@ Phase 1: Model conversion ─▶ Phase 2: Proof of concept ─▶ Phase 3: CLI
 
 ---
 
-## Phase 4: Distribution
+## Phase 4: Licensing review
+
+**Goal:** Finalise the project licence before going public.
+
+Licensing is a gate — it must be resolved before distribution (Phase 5). The project currently uses MIT as a placeholder.
+
+**Tasks:**
+1. Review licence options given model weight licences (BSD-3-Clause from Real-ESRGAN)
+2. Decide on project licence (MIT, BSD-3-Clause, Apache-2.0, or other)
+3. Ensure THIRD_PARTY_LICENSES is complete and accurate
+4. Legal review of GFPGAN download approach (we don't redistribute, user downloads from upstream)
+5. Update LICENSE file
+
+**Artefacts:** Final LICENSE file.
+
+**Note:** Downstream projects (Upscayl, video2x, ComfyUI, Cupscale) each choose their own licence and include BSD-3-Clause notice for Real-ESRGAN weights as a third-party component. BSD-3-Clause does not require downstream projects to adopt it. See [model licensing](model-licensing.md).
+
+**Milestone:** Licence finalised and documented.
+
+---
+
+## Phase 5: Distribution
 
 **Goal:** Homebrew formula, release automation, public-ready packaging.
+
+**Prerequisite:** Phase 4 (licensing review) must be complete.
 
 **Tasks:**
 1. Homebrew formula (`Formula/superscale.rb`)
 2. `make release` automation (tag, build, push, update formula, push tap)
-3. Decide model bundling strategy (bundle in bottle vs download on first use)
+3. Model storage strategy decided and implemented (see [issue #2](https://github.com/tigger04/superscale/issues/2))
 4. README quickstart verified end-to-end
 5. `brew install superscale && superscale photo.png` works from zero
+6. Set GitHub repo to public
 
 **Artefacts:** `brew tap tigger04/tap && brew install superscale` works.
 
@@ -112,7 +162,7 @@ Phase 1: Model conversion ─▶ Phase 2: Proof of concept ─▶ Phase 3: CLI
 
 ---
 
-## Phase 5: Model download
+## Phase 6: Model download
 
 **Goal:** Support models that aren't bundled, downloaded on demand.
 
@@ -121,7 +171,7 @@ Phase 1: Model conversion ─▶ Phase 2: Proof of concept ─▶ Phase 3: CLI
 2. First-use download with progress indicator
 3. SHA256 verification of downloaded models
 4. `superscale --download-models` to pre-fetch all models
-5. Storage in `~/.local/share/superscale/models/`
+5. Model storage location (decided in Phase 5, see [issue #2](https://github.com/tigger04/superscale/issues/2))
 
 **Artefacts:** Model download infrastructure. Manifest file.
 
@@ -129,7 +179,7 @@ Phase 1: Model conversion ─▶ Phase 2: Proof of concept ─▶ Phase 3: CLI
 
 ---
 
-## Phase 6: Face enhancement (GFPGAN)
+## Phase 7: Face enhancement (GFPGAN)
 
 **Goal:** Optional GFPGAN face enhancement as a user-initiated download.
 
@@ -147,24 +197,6 @@ Phase 1: Model conversion ─▶ Phase 2: Proof of concept ─▶ Phase 3: CLI
 **Risk:** GFPGAN's architecture (StyleGAN2 + UNet) is more complex than RRDBNet. CoreML conversion may require workarounds or may not be feasible, in which case we'd need an alternative approach.
 
 **Milestone:** `superscale --face-enhance portrait.png` produces visibly improved faces.
-
----
-
-## Phase 7: Licensing review
-
-**Goal:** Finalise the project licence before going public.
-
-**Tasks:**
-1. Review licence options given model weight licences (BSD-3-Clause from Real-ESRGAN)
-2. Decide on project licence (MIT, BSD-3-Clause, Apache-2.0, or other)
-3. Ensure THIRD_PARTY_LICENSES is complete and accurate
-4. Legal review of GFPGAN download approach (we don't redistribute, user downloads from upstream)
-5. Update LICENSE file
-6. Set GitHub repo to public
-
-**Artefacts:** Final LICENSE file. Public repository.
-
-**Milestone:** Repo is public with a clear, correct licence.
 
 ---
 
@@ -254,6 +286,7 @@ Phase 1: Model conversion ─▶ Phase 2: Proof of concept ─▶ Phase 3: CLI
 |---------|------|---------|
 | 0.1 | 2026-03-18 | Initial 5-phase plan |
 | 0.2 | 2026-03-18 | Expanded to 11 phases: added proof of concept, face enhancement, licensing, App Store, and iOS phases |
+| 0.3 | 2026-03-18 | Reordered: licensing (Phase 4) now gates distribution (Phase 5). Broke Phase 3 into sub-phases (3a–3e). Removed PyTorch comparison from Phase 2. Added model storage strategy cross-reference. |
 
 ## See also
 

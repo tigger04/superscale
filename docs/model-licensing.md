@@ -1,4 +1,4 @@
-<!-- Version: 0.1 | Last updated: 2026-03-18 -->
+<!-- Version: 0.2 | Last updated: 2026-03-18 -->
 
 # Model licensing
 
@@ -43,6 +43,19 @@ GFPGAN (TencentARC) is **not included** in Superscale. While GFPGAN's own code i
 - **DFDNet**: CC BY-NC-SA 4.0 (non-commercial, share-alike)
 
 GFPGAN's Apache-2.0 licence explicitly carves out these third-party components. Redistributing GFPGAN weights in an open-source project carries meaningful legal risk.
+
+## Downstream projects
+
+Other projects that redistribute Real-ESRGAN model weights each choose their own project licence and include BSD-3-Clause attribution for the weights as a third-party component:
+
+| Project | Project licence | Redistributes weights? | Approach |
+|---------|----------------|----------------------|----------|
+| [Upscayl](https://github.com/upscayl/upscayl) | AGPL-3.0 | Yes (bundled) | BSD-3-Clause notice in THIRD_PARTY |
+| [video2x](https://github.com/k4yt3x/video2x) | AGPL-3.0 | Yes (bundled) | BSD-3-Clause notice in THIRD_PARTY |
+| [ComfyUI](https://github.com/comfyanonymous/ComfyUI) | GPL-3.0 | Yes (via nodes) | BSD-3-Clause notice |
+| [Cupscale](https://github.com/n00mkrad/cupscale) | MIT | Yes (bundled) | BSD-3-Clause notice |
+
+BSD-3-Clause does not require downstream projects to adopt the same licence. The only obligations are: retain the copyright notice, retain the licence text, and do not use the author's name to endorse derivatives.
 
 ## Attribution
 

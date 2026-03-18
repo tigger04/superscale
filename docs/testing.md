@@ -1,4 +1,4 @@
-<!-- Version: 0.1 | Last updated: 2026-03-18 -->
+<!-- Version: 0.2 | Last updated: 2026-03-18 -->
 
 # Testing
 
@@ -13,7 +13,7 @@ Testing follows TDD per project standards. All tests use XCTest and run via `mak
 | Unit | Individual functions, model registry, path resolution | `Tests/SuperscaleTests/` | Fast (<1s) |
 | Integration | Full pipeline with small test images | `Tests/SuperscaleTests/` | Medium (<10s) |
 | End-to-end | CLI invocation via subprocess | `Tests/SuperscaleTests/` | Slow (<30s) |
-| Quality | Output comparison against PyTorch reference | `Tests/SuperscaleTests/` | Slow |
+| Quality | Output correctness and regression checks | `Tests/SuperscaleTests/` | Slow |
 
 ## Test structure
 
@@ -28,23 +28,23 @@ Tests/SuperscaleTests/
 ├── Resources/
 │   ├── test_input_64x64.png      # Minimal test image
 │   ├── test_input_alpha.png      # Image with alpha channel
-│   └── reference_output_4x.png   # PyTorch reference output
+│   └── reference_output_4x.png   # Known-good reference output
 └── NEXT_IDS.txt                  # Test ID allocation
 ```
 
 ## Quality validation
 
-Output quality is validated by comparing Superscale's output against the PyTorch reference implementation:
+Output quality is validated by inspection and automated checks:
 
-1. Run the same input image through both PyTorch Real-ESRGAN and Superscale
-2. Compare pixel-by-pixel using PSNR (peak signal-to-noise ratio)
-3. Threshold: PSNR > 40 dB (visually indistinguishable)
+1. Output image has the correct dimensions (input × scale factor)
+2. Visual inspection — sharp detail, no tiling artefacts, no colour shifts
+3. Automated regression: a known input image produces output that is pixel-identical (or within tolerance) across builds
 
-Small numerical differences are expected between PyTorch and CoreML due to floating-point precision differences across runtimes. The PSNR threshold accommodates this.
+Formal PSNR metrics may be added later if needed. The primary quality gate is visual correctness.
 
 ## Test images
 
-Test images are small (64×64 or 128×128) synthetic images to keep the test suite fast. Quality validation uses a single 256×256 natural image with a pre-computed PyTorch reference.
+Test images are small (64×64 or 128×128) synthetic images to keep the test suite fast. Quality validation uses a single 256×256 natural image with a known-good reference output.
 
 No production images, copyrighted content, or user data in the test suite.
 

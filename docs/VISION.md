@@ -59,10 +59,16 @@ superscale -m anime -o out/ *.png       # Anime model, batch processing
 ## Delivery phases
 
 1. **CoreML model conversion** — convert Real-ESRGAN models, validate output quality
-2. **Swift CLI** — single-image upscaling with model selection
-3. **Homebrew distribution** — formula, tap, `brew install superscale`
-4. **Batch processing** — multiple images, directory input
-5. **SwiftUI GUI** — drag-and-drop, preview, model selection
+2. **Proof of concept** — single image upscaled via CoreML in Swift
+3. **CLI implementation** — full pipeline with tiling, batch processing, model selection
+4. **Licensing review** — finalise licence before going public
+5. **Distribution** — Homebrew formula, public repo
+6. **Model download** — on-demand download of non-bundled models
+7. **Face enhancement** — optional GFPGAN download
+8. **macOS GUI** — SwiftUI drag-and-drop app
+9. **macOS App Store** — App Store distribution
+10. **iOS app** — iPhone and iPad
+11. **iOS App Store** — iOS distribution
 
 See [implementation plan](implementation-plan.md) for detail.
 
