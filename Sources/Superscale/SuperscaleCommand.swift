@@ -29,13 +29,15 @@ struct Superscale: ParsableCommand {
 
     mutating func run() throws {
         if listModels {
-            print("Available models:")
-            print("  realesrgan-x4plus       General photo (4×) [default]")
-            print("  realesrgan-x2plus       General photo (2×)")
-            print("  realesrnet-x4plus       General photo, PSNR-oriented (4×)")
-            print("  realesrgan-anime-6b     Anime/illustration (4×)")
-            print("  realesr-animevideov3    Anime video frames (4×)")
-            print("  realesr-general-x4v3    General scenes, compact (4×)")
+            print("Models:")
+            for model in ModelRegistry.models {
+                let status = ModelRegistry.isInstalled(model) ? "installed" : "not installed"
+                let defaultLabel = model.isDefault ? " [default]" : ""
+                let nameCol = model.name.padding(toLength: 24, withPad: " ", startingAt: 0)
+                let descCol = "\(model.displayName)\(defaultLabel)"
+                    .padding(toLength: 38, withPad: " ", startingAt: 0)
+                print("  \(nameCol) \(descCol) [\(status)]")
+            }
             return
         }
 
