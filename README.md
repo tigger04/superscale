@@ -44,16 +44,16 @@ superscale -o output/ *.png
 superscale --list-models
 ```
 
-## Dependencies
+## Requirements
 
-| Dependency | Purpose | Install |
-|-----------|---------|---------|
-| macOS 14+ | CoreML runtime | Built-in |
-| Xcode CLT | Swift compiler | `xcode-select --install` |
+- macOS 14 (Sonoma) or later
+- Apple Silicon (M1, M2, M3, M4)
 
-Runtime dependencies: **none**. CoreML is a system framework.
+No other dependencies. Everything runs on built-in system frameworks.
 
-Build-time only: `coremltools` (Python, for model conversion during development/release).
+### Building from source
+
+If building from source rather than installing via Homebrew, you'll need Xcode Command Line Tools (`xcode-select --install`).
 
 ## Documentation
 
