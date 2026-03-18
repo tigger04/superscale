@@ -10,7 +10,7 @@ LINK_DIR := $(HOME)/.local/bin
 RELEASE_VERSION ?=
 SKIP_TESTS ?=
 
-.PHONY: help build build-debug test test-one-off clean install uninstall release sync convert-models
+.PHONY: help build build-debug test test-one-off clean install uninstall release release-models sync convert-models
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -49,20 +49,21 @@ uninstall: ## Remove symlink from ~/.local/bin
 	@echo "Uninstalled."
 
 convert-models: ## Convert PyTorch models to CoreML (requires Python venv)
-	@echo "Model conversion requires a Python venv with torch and coremltools."
-	@echo "See scripts/convert_model.py for details."
 	@if [ ! -d ".venv" ]; then \
 		echo "Creating venv..."; \
 		python3 -m venv .venv; \
-		source .venv/bin/activate && pip install torch coremltools basicsr; \
+		. .venv/bin/activate && pip install -r scripts/requirements-convert.txt; \
 	fi
-	source .venv/bin/activate && python scripts/convert_model.py
+	. .venv/bin/activate && python scripts/convert_model.py --all --input-dir checkpoints --output-dir models
 
 release: ## Tag a release and update Homebrew formula (usage: make release [VERSION=x.y.z])
 ifndef SKIP_TESTS
 	@$(MAKE) test
 endif
 	@./scripts/release.sh $(RELEASE_VERSION)
+
+release-models: ## Upload model artefacts to GitHub Release (usage: make release-models)
+	@./scripts/release-models.sh
 
 sync: ## Stage all, commit, pull (merge), push
 	@if git diff --quiet && git diff --cached --quiet && [ -z "$$(git ls-files --others --exclude-standard)" ]; then \
@@ -75,5 +76,6 @@ sync: ## Stage all, commit, pull (merge), push
 	@if [ -f .gitmodules ]; then \
 		git submodule update --init --recursive; \
 	fi
+	@./scripts/check-models.sh
 	git pull --rebase=false
 	git push

@@ -6,5 +6,7 @@ xcuserdata/
 DerivedData/
 .DS_Store
 *.mlpackage
+*.mlpackage.zip
 *.pth
+checkpoints/
 .env

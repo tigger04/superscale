@@ -1,4 +1,4 @@
-<!-- Version: 0.2 | Last updated: 2026-03-18 -->
+<!-- Version: 0.3 | Last updated: 2026-03-18 -->
 
 # Testing
 
@@ -19,16 +19,17 @@ Testing follows TDD per project standards. All tests use XCTest and run via `mak
 
 ```
 Tests/SuperscaleTests/
-├── TilerTests.swift              # Tile splitting and stitching
-├── ModelRegistryTests.swift      # Model lookup, metadata
-├── ImageLoaderTests.swift        # Image reading, format detection
-├── ImageWriterTests.swift        # Output writing, format options
 ├── CLITests.swift                # End-to-end CLI subprocess tests
-├── QualityTests.swift            # Output vs reference comparison
+├── ManifestTests.swift           # Model manifest schema validation
+├── ModelRegistryTests.swift      # Model lookup, metadata, --list-models status
+├── TilerTests.swift              # Tile splitting and stitching (planned)
+├── ImageLoaderTests.swift        # Image reading, format detection (planned)
+├── ImageWriterTests.swift        # Output writing, format options (planned)
+├── QualityTests.swift            # Output vs reference comparison (planned)
 ├── Resources/
-│   ├── test_input_64x64.png      # Minimal test image
-│   ├── test_input_alpha.png      # Image with alpha channel
-│   └── reference_output_4x.png   # Known-good reference output
+│   ├── test_input_64x64.png      # Minimal test image (planned)
+│   ├── test_input_alpha.png      # Image with alpha channel (planned)
+│   └── reference_output_4x.png   # Known-good reference output (planned)
 └── NEXT_IDS.txt                  # Test ID allocation
 ```
 
