@@ -26,7 +26,8 @@ Delivery is phased. Each phase produces a working, testable increment. Phases ar
 | 9 | [#15](https://github.com/tigger04/superscale/issues/15) | macOS App Store |
 | 10 | [#16](https://github.com/tigger04/superscale/issues/16) | iOS app |
 | 11 | [#17](https://github.com/tigger04/superscale/issues/17) | iOS App Store |
-| — | [#2](https://github.com/tigger04/superscale/issues/2) | Model storage strategy (cross-cutting) |
+| — | [#2](https://github.com/tigger04/superscale/issues/2) | Model storage strategy (cross-cutting, user-side) |
+| — | [#18](https://github.com/tigger04/superscale/issues/18) | Model artefact management (cross-cutting, build/release-side) |
 
 ## Roadmap
 
