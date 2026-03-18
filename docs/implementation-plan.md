@@ -1,4 +1,4 @@
-<!-- Version: 0.6 | Last updated: 2026-03-18 -->
+<!-- Version: 0.7 | Last updated: 2026-03-18 -->
 
 # Implementation plan
 
@@ -15,13 +15,13 @@ Issues should be tackled in this order. Where multiple issues share a step numbe
 | 1 | [#2](https://github.com/tigger04/superscale/issues/2) | Model storage strategy (decision) | — | **closed** |
 | 1 | [#3](https://github.com/tigger04/superscale/issues/3) | Phase 1: CoreML model conversion | — | **closed** |
 | 2 | [#18](https://github.com/tigger04/superscale/issues/18) | Model artefact management (sync, release) | #2, #3 | **closed** |
-| 2 | [#4](https://github.com/tigger04/superscale/issues/4) | Phase 2: Proof of concept | #3 | open |
+| 2 | [#4](https://github.com/tigger04/superscale/issues/4) | Phase 2: Proof of concept | #3 | **implemented** (tests skip until models converted) |
 | 3 | [#6](https://github.com/tigger04/superscale/issues/6) | Phase 3a: Image I/O | #4 | open |
 | 3 | [#7](https://github.com/tigger04/superscale/issues/7) | Phase 3b: Tiling engine | #4 | open |
 | 3 | [#8](https://github.com/tigger04/superscale/issues/8) | Phase 3c: CoreML inference + model registry | #4 | open |
 | 4 | [#9](https://github.com/tigger04/superscale/issues/9) | Phase 3d: Pipeline integration | #6, #7, #8 | open |
 | 5 | [#10](https://github.com/tigger04/superscale/issues/10) | Phase 3e: CLI polish | #9 | open |
-| 6 | [#5](https://github.com/tigger04/superscale/issues/5) | Phase 4: Licensing review | — (gate before #12) | open |
+| 6 | [#5](https://github.com/tigger04/superscale/issues/5) | Phase 4: Licensing review | — (gate before #12) | **implemented** (all ACs passing) |
 | 7 | [#12](https://github.com/tigger04/superscale/issues/12) | Phase 5: Distribution (Homebrew) | #5, #10, #18 | open |
 | 8 | [#13](https://github.com/tigger04/superscale/issues/13) | Phase 6: Model download (on-demand) | #12 | open |
 | 9 | [#1](https://github.com/tigger04/superscale/issues/1) | Phase 7: Face enhancement (GFPGAN) | #11 | open |
@@ -39,7 +39,7 @@ Issues should be tackled in this order. Where multiple issues share a step numbe
                              │
 #3 Phase 1: Model conversion─┤                   ✓ closed
     │                        │
-    ├──▶ #4  Phase 2: PoC   │                    ← next
+    ├──▶ #4  Phase 2: PoC   │                    ✓ implemented
     │        │               │
     │        ├──▶ #6  3a: Image I/O  ──┐
     │        ├──▶ #7  3b: Tiling  ─────┤
@@ -51,7 +51,7 @@ Issues should be tackled in this order. Where multiple issues share a step numbe
     │                                  │
     └──▶ #18 Model artefact mgmt ─────┤          ✓ closed
                                        │
-              #5  Phase 4: Licensing ──┤
+              #5  Phase 4: Licensing ──┤          ✓ implemented
                                        │
                          #12 Phase 5: Distribution
                                        │
@@ -318,6 +318,7 @@ Licensing is a gate — it must be resolved before distribution (Phase 5). The p
 | 0.4 | 2026-03-18 | Added issue index and linked all phases to GitHub issues (#1–#17). Allocated test IDs RT-008–RT-031 and UT-001–UT-006. |
 | 0.5 | 2026-03-18 | Replaced issue index with execution order table showing dependencies. Integrated #2 and #18 into roadmap. Added dependency graph. |
 | 0.6 | 2026-03-18 | Added status column to execution order. Marked #2, #3, #18 as closed. Updated roadmap with completion markers. |
+| 0.7 | 2026-03-18 | Marked #4 (PoC) and #5 (licensing) as implemented. |
 
 ## See also
 
