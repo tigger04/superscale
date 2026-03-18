@@ -1,0 +1,5 @@
+# ABOUTME: Python dependencies for model conversion (build-time only).
+# ABOUTME: Install in a venv: python3 -m venv .venv && pip install -r scripts/requirements-convert.txt
+torch>=2.0.0
+coremltools>=7.0
+numpy>=1.24.0
