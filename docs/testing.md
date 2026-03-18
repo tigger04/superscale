@@ -1,4 +1,4 @@
-<!-- Version: 0.3 | Last updated: 2026-03-18 -->
+<!-- Version: 0.4 | Last updated: 2026-03-18 -->
 
 # Testing
 
@@ -20,6 +20,8 @@ Testing follows TDD per project standards. All tests use XCTest and run via `mak
 ```
 Tests/SuperscaleTests/
 ├── CLITests.swift                # End-to-end CLI subprocess tests
+├── CoreMLTests.swift             # CoreML inference tests (skip when model not available)
+├── LicensingTests.swift          # Licence and attribution validation
 ├── ManifestTests.swift           # Model manifest schema validation
 ├── ModelRegistryTests.swift      # Model lookup, metadata, --list-models status
 ├── TilerTests.swift              # Tile splitting and stitching (planned)

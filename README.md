@@ -70,12 +70,11 @@ If building from source rather than installing via Homebrew, you'll need Xcode C
 ```
 superscale/
 ├── Sources/Superscale/       # Swift source
-│   ├── main.swift            # CLI entry point
-│   ├── Commands/             # ArgumentParser subcommands
-│   ├── Pipeline/             # CoreML inference, image I/O
-│   └── Models/               # Model registry, metadata
+│   ├── SuperscaleCommand.swift  # CLI entry point
+│   ├── ModelRegistry.swift      # Model catalogue and path resolution
+│   └── CoreMLInference.swift    # CoreML model loading and inference
 ├── Tests/SuperscaleTests/    # XCTest suite
-├── Models/                   # CoreML .mlpackage files (or download manifest)
+├── models/                   # Model manifest (manifest.json tracked; .mlpackage gitignored)
 ├── Formula/                  # Homebrew formula
 ├── scripts/                  # Release and conversion tooling
 │   └── convert_model.py      # PyTorch → CoreML conversion script
@@ -93,6 +92,7 @@ superscale/
 | `make test` | Run test suite |
 | `make install` | Build + symlink to `~/.local/bin` |
 | `make release` | Tag, build, push, update Homebrew formula |
+| `make release-models` | Upload model artefacts to GitHub Release |
 | `make convert-models` | Run PyTorch → CoreML conversion (dev only) |
 | `make clean` | Remove build artefacts |
 | `make sync` | Git add, commit, pull, push |
