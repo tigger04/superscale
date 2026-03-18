@@ -1,4 +1,4 @@
-<!-- Version: 0.1 | Last updated: 2026-03-18 -->
+<!-- Version: 0.2 | Last updated: 2026-03-18 -->
 
 # Architecture
 
@@ -84,8 +84,9 @@ struct ModelInfo {
 3. Download from GitHub release (if first-use download is enabled)
 
 **Model storage:**
-- Bundled: `~/.local/share/superscale/models/`
-- Homebrew: installed to the Cellar, symlinked to the share directory
+- Bundled: installed to the Cellar with the binary (Homebrew), or `~/Library/Application Support/superscale/models/`
+- Downloaded: `~/Library/Application Support/superscale/models/`
+- See [issue #2](https://github.com/tigger04/superscale/issues/2) for the full storage strategy decision
 
 ### Conversion tooling (`scripts/`)
 

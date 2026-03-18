@@ -258,7 +258,7 @@ Licensing is a gate — it must be resolved before distribution (Phase 5). The p
 
 **Artefacts:** App Store listing.
 
-**Risk:** App Store sandboxing may conflict with model storage in `~/.local/share/`. App Store builds would need to use the app container or on-demand resources. The Homebrew CLI and App Store GUI may need different model storage strategies.
+**Risk:** App Store sandboxing restricts filesystem access. `~/Library/Application Support/superscale/` is accessible under sandbox, but downloading models at runtime requires the network entitlement. The Homebrew CLI and App Store GUI may need different model delivery strategies (on-demand resources vs direct download).
 
 **Milestone:** Superscale available on the Mac App Store.
 
