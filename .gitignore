@@ -1,0 +1,10 @@
+.build/
+.venv/
+.swiftpm/
+*.xcodeproj/
+xcuserdata/
+DerivedData/
+.DS_Store
+*.mlpackage
+*.pth
+.env

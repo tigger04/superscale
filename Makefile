@@ -1,0 +1,79 @@
+# ABOUTME: Build entry points for Superscale.
+# ABOUTME: Provides build, test, install, release, and model conversion targets.
+
+SHELL := /bin/bash
+.DEFAULT_GOAL := help
+
+BINARY_NAME := superscale
+BUILD_DIR := .build/release
+LINK_DIR := $(HOME)/.local/bin
+RELEASE_VERSION ?=
+SKIP_TESTS ?=
+
+.PHONY: help build build-debug test test-one-off clean install uninstall release sync convert-models
+
+help: ## Show this help
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
+		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+build: ## Build release binary
+	swift build -c release
+
+build-debug: ## Build debug binary
+	swift build
+
+test: ## Run regression tests
+	swift test
+
+test-one-off: ## Run one-off tests
+ifdef ISSUE
+	swift test --filter "OT.*$(ISSUE)"
+else
+	swift test --filter "OT"
+endif
+
+clean: ## Remove build artefacts
+	rm -rf .build
+
+install: build ## Build and symlink to ~/.local/bin
+	@mkdir -p "$(LINK_DIR)"
+	@ln -sf "$(CURDIR)/$(BUILD_DIR)/$(BINARY_NAME)" "$(LINK_DIR)/$(BINARY_NAME)"
+	@echo "Installed: $(LINK_DIR)/$(BINARY_NAME)"
+	@case ":$$PATH:" in \
+		*":$(LINK_DIR):"*) ;; \
+		*) echo "WARNING: $(LINK_DIR) is not in your PATH. Add it to your shell profile." ;; \
+	esac
+
+uninstall: ## Remove symlink from ~/.local/bin
+	@if [ -L "$(LINK_DIR)/$(BINARY_NAME)" ]; then rm -f "$(LINK_DIR)/$(BINARY_NAME)"; fi
+	@echo "Uninstalled."
+
+convert-models: ## Convert PyTorch models to CoreML (requires Python venv)
+	@echo "Model conversion requires a Python venv with torch and coremltools."
+	@echo "See scripts/convert_model.py for details."
+	@if [ ! -d ".venv" ]; then \
+		echo "Creating venv..."; \
+		python3 -m venv .venv; \
+		source .venv/bin/activate && pip install torch coremltools basicsr; \
+	fi
+	source .venv/bin/activate && python scripts/convert_model.py
+
+release: ## Tag a release and update Homebrew formula (usage: make release [VERSION=x.y.z])
+ifndef SKIP_TESTS
+	@$(MAKE) test
+endif
+	@./scripts/release.sh $(RELEASE_VERSION)
+
+sync: ## Stage all, commit, pull (merge), push
+	@if git diff --quiet && git diff --cached --quiet && [ -z "$$(git ls-files --others --exclude-standard)" ]; then \
+		echo "Nothing to commit."; \
+	else \
+		git add --all && \
+		git commit -m "sync: $$(date +%Y-%m-%d)" && \
+		echo "Committed."; \
+	fi
+	@if [ -f .gitmodules ]; then \
+		git submodule update --init --recursive; \
+	fi
+	git pull --rebase=false
+	git push
