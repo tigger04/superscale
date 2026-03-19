@@ -50,9 +50,9 @@ uninstall: ## Remove symlink from ~/.local/bin
 
 convert-models: ## Convert PyTorch models to CoreML (requires Python venv)
 	@if [ ! -d ".venv" ]; then \
-		echo "Creating venv..."; \
-		python3 -m venv .venv; \
-		. .venv/bin/activate && pip install -r scripts/requirements-convert.txt; \
+		echo "Creating venv with Python 3.12..."; \
+		/opt/homebrew/bin/python3.12 -m venv .venv; \
+		. .venv/bin/activate && pip install --upgrade pip && pip install -r scripts/requirements-convert.txt; \
 	fi
 	. .venv/bin/activate && python scripts/convert_model.py --all --input-dir checkpoints --output-dir models
 

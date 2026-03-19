@@ -304,6 +304,7 @@ def convert_model(
     """
     import coremltools as ct
     import torch
+    import torch.nn as nn
 
     spec = MODELS[name]
     checkpoint_path = input_dir / spec["checkpoint"]
@@ -333,19 +334,34 @@ def convert_model(
     model.eval()
     log.info("  Loaded weights successfully")
 
-    # 2. Trace with example input
+    # 2. Wrap model to output [0, 255] range — coremltools 7+ requires
+    #    scale=1.0 for output ImageType, so we clamp and scale inside the model
+    class OutputScaler(nn.Module):
+        def __init__(self, inner):
+            super().__init__()
+            self.inner = inner
+
+        def forward(self, x):
+            out = self.inner(x)
+            out = torch.clamp(out, 0.0, 1.0)
+            return out * 255.0
+
+    wrapped = OutputScaler(model)
+    wrapped.eval()
+
+    # 3. Trace with example input
     scale = spec["params"].get("scale") or spec["params"].get("upscale", 4)
     example_input = torch.randn(1, 3, tile_size, tile_size)
 
     with torch.no_grad():
-        traced = torch.jit.trace(model, example_input)
+        traced = torch.jit.trace(wrapped, example_input)
     log.info("  Traced model with input shape [1, 3, %d, %d]", tile_size, tile_size)
 
-    # 3. Convert to CoreML
+    # 4. Convert to CoreML
     mlmodel = ct.convert(
         traced,
         inputs=[ct.ImageType(name="input", shape=example_input.shape, scale=1 / 255.0)],
-        outputs=[ct.ImageType(name="output", scale=255.0)],
+        outputs=[ct.ImageType(name="output", scale=1.0)],
         minimum_deployment_target=ct.target.macOS14,
     )
     log.info("  CoreML conversion complete")
