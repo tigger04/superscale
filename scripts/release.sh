@@ -63,7 +63,9 @@ fi
 # --- 1. Update version in source ---
 
 echo "Updating version in source..."
-sed -i '' "s/version: \"${CURRENT_VERSION}\"/version: \"${NEW_VERSION}\"/" "${SOURCE_FILE}"
+TMPFILE=$(mktemp)
+sed "s/version: \"${CURRENT_VERSION}\"/version: \"${NEW_VERSION}\"/" "${SOURCE_FILE}" > "${TMPFILE}"
+mv "${TMPFILE}" "${SOURCE_FILE}"
 
 # Verify the change took effect
 VERIFY_VERSION=$(get_current_version)
