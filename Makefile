@@ -38,6 +38,7 @@ clean: ## Remove build artefacts
 install: build ## Build and symlink to ~/.local/bin
 	@mkdir -p "$(LINK_DIR)"
 	@ln -sf "$(CURDIR)/$(BUILD_DIR)/$(BINARY_NAME)" "$(LINK_DIR)/$(BINARY_NAME)"
+	@ln -sfn "$(CURDIR)/models" "$(CURDIR)/$(BUILD_DIR)/models"
 	@echo "Installed: $(LINK_DIR)/$(BINARY_NAME)"
 	@case ":$$PATH:" in \
 		*":$(LINK_DIR):"*) ;; \
