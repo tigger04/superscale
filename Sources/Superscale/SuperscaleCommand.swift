@@ -21,8 +21,8 @@ struct Superscale: ParsableCommand {
     @Option(name: .shortAndLong, help: "Output directory.")
     var output: String?
 
-    @Option(name: .shortAndLong, help: "Model name.")
-    var model: String = "realesrgan-x4plus"
+    @Option(name: .shortAndLong, help: "Model name (auto-detected if omitted).")
+    var model: String?
 
     @Option(name: .long, help: "Tile size in pixels (smaller = less memory, more passes).")
     var tileSize: Int?
@@ -48,15 +48,6 @@ struct Superscale: ParsableCommand {
             throw ValidationError("No input files specified.")
         }
 
-        // Resolve model — if -s is specified, pick the matching scale variant
-        let modelName = resolveModelName()
-
-        // Validate model exists
-        guard let modelInfo = ModelRegistry.model(named: modelName) else {
-            let available = ModelRegistry.models.map { $0.name }.joined(separator: ", ")
-            throw ValidationError("Unknown model '\(modelName)'. Available: \(available)")
-        }
-
         // Create output directory if needed
         let outputDir: URL?
         if let outputPath = output {
@@ -70,9 +61,31 @@ struct Superscale: ParsableCommand {
             outputDir = nil
         }
 
+        // Resolve model — explicit or auto-detected
+        let resolvedModelName: String
+        if let explicitModel = model {
+            // User explicitly specified -m
+            resolvedModelName = explicitModel
+            fputs("Using model: \(resolvedModelName)\n", stderr)
+        } else {
+            // Auto-detect content type from first input image
+            let firstInputURL = URL(fileURLWithPath: inputs[0])
+            let loaded = try ImageLoader.load(from: firstInputURL)
+            let (contentType, _) = try ContentDetector.detect(image: loaded.image)
+            resolvedModelName = ContentDetector.modelName(for: contentType, scale: scale)
+            fputs("Detected: \(contentType) \u{2192} using \(resolvedModelName)\n", stderr)
+        }
+
+        // Validate model exists
+        guard let modelInfo = ModelRegistry.model(named: resolvedModelName) else {
+            let available = ModelRegistry.models.map { $0.name }.joined(separator: ", ")
+            throw ValidationError(
+                "Unknown model '\(resolvedModelName)'. Available: \(available)")
+        }
+
         // Create pipeline
         let pipeline = try Pipeline(
-            modelName: modelName, tileSize: tileSize)
+            modelName: resolvedModelName, tileSize: tileSize)
         pipeline.onProgress = { message in
             fputs("\(message)\n", stderr)
         }
@@ -108,19 +121,5 @@ struct Superscale: ParsableCommand {
                 throw ExitCode.failure
             }
         }
-    }
-
-    /// Resolve the model name, matching scale factor if the user specified -s
-    /// with the default model.
-    private func resolveModelName() -> String {
-        // If the user explicitly set -m, use it as-is
-        if model != "realesrgan-x4plus" {
-            return model
-        }
-        // If -s 2 was specified with the default model, switch to x2plus
-        if scale == 2 {
-            return "realesrgan-x2plus"
-        }
-        return model
     }
 }

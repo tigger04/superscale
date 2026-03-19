@@ -132,6 +132,60 @@ final class CLITests: XCTestCase {
         }
     }
 
+    // RT-037: Explicit -m flag bypasses auto-detection
+    func test_cli_explicit_model_bypasses_detection_RT037() throws {
+        let modelPath = projectRoot.appendingPathComponent("models/RealESRNet_x4plus.mlpackage")
+        try XCTSkipIf(!FileManager.default.fileExists(atPath: modelPath.path),
+                      "RealESRNet_x4plus model not found")
+
+        let input = testImagesDir.appendingPathComponent("remy2.jpg")
+        try XCTSkipIf(!FileManager.default.fileExists(atPath: input.path), "remy2.jpg not found")
+
+        let outputDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("superscale_explicit_\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: outputDir) }
+
+        let result = try runCLI([
+            input.path,
+            "-o", outputDir.path,
+            "-m", "realesrnet-x4plus"
+        ])
+
+        XCTAssertEqual(result.exitCode, 0, "Should succeed. stderr: \(result.stderr)")
+        // Explicit model: should report "Using model:" not "Detected:"
+        XCTAssertTrue(result.stderr.contains("Using model: realesrnet-x4plus"),
+                      "Explicit model should report 'Using model:' — stderr: \(result.stderr)")
+        XCTAssertFalse(result.stderr.contains("Detected:"),
+                       "Explicit model should not show 'Detected:' — stderr: \(result.stderr)")
+    }
+
+    // RT-038: Auto-detection reports detected content type and model in progress output
+    func test_cli_auto_detection_reports_content_type_RT038() throws {
+        let modelPath = projectRoot.appendingPathComponent("models/RealESRGAN_x4plus.mlpackage")
+        try XCTSkipIf(!FileManager.default.fileExists(atPath: modelPath.path),
+                      "x4plus model not found")
+
+        let input = testImagesDir.appendingPathComponent("remy2.jpg")
+        try XCTSkipIf(!FileManager.default.fileExists(atPath: input.path), "remy2.jpg not found")
+
+        let outputDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("superscale_autodetect_\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: outputDir) }
+
+        // No -m flag → auto-detection should kick in
+        let result = try runCLI([
+            input.path,
+            "-o", outputDir.path
+        ])
+
+        XCTAssertEqual(result.exitCode, 0, "Should succeed. stderr: \(result.stderr)")
+        // Auto-detection should report the detected type and chosen model
+        XCTAssertTrue(result.stderr.contains("Detected:"),
+                      "Auto-detection should report 'Detected:' — stderr: \(result.stderr)")
+        XCTAssertTrue(result.stderr.contains("realesrgan-"),
+                      "Auto-detection should include model name — stderr: \(result.stderr)")
+    }
+
     // MARK: - Helpers
 
     private var projectRoot: URL {
