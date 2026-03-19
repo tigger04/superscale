@@ -1,23 +1,19 @@
 # Superscale
 
-Fast AI image upscaling for Mac. Takes a low-resolution image and produces a sharp, detailed version at 2× or 4× the original size.
-
-Built natively for Apple Silicon — runs on the Neural Engine rather than CPU, so a 1024×1024 image upscales in seconds, not minutes.
+Fast AI image upscaling for Mac, built natively for Apple Silicon. Runs inference on the Neural Engine — not CPU — so a 1024×1024 image upscales in seconds, not minutes.
 
 ## Features
 
-- **2× and 4× upscaling** with multiple models optimized for photos, illustrations, and anime
+- **Hardware-accelerated** — runs CoreML models on Apple's Neural Engine for maximum throughput on M1/M2/M3/M4
+- **Auto-detect content type** — automatically selects the best model for your image (photo, illustration, anime) using Apple's Vision framework
+- **2× and 4× upscaling** with six models optimized for different content types
 - **Batch processing** — upscale entire directories of images
-- **Fast** — uses Apple's Neural Engine hardware, not CPU
-- **No dependencies** — single binary, installable via Homebrew
+- **Zero dependencies** — single binary, all models bundled, installable in one command
 
 ## Quickstart
 
-### Homebrew (recommended)
-
 ```bash
-brew tap tigger04/tap
-brew install superscale
+brew install tigger04/tap/superscale
 ```
 
 ### From source
@@ -31,7 +27,7 @@ make install
 ### Usage
 
 ```bash
-# Upscale a single image (4× by default)
+# Upscale an image — auto-detects best model
 superscale photo.png
 
 # Specify scale factor and output directory
@@ -39,6 +35,9 @@ superscale -s 2 -o upscaled/ photo.png
 
 # Process multiple images
 superscale -o output/ *.png
+
+# Override model selection
+superscale -m realesrgan-anime-6b illustration.png
 
 # List available models
 superscale --list-models
@@ -74,6 +73,7 @@ superscale/
 │   ├── SuperscaleCommand.swift  # CLI entry point (ArgumentParser)
 │   ├── Pipeline.swift           # End-to-end upscaling orchestration
 │   ├── CoreMLInference.swift    # CoreML model loading and inference
+│   ├── ContentDetector.swift    # Auto-detect content type (photo/illustration)
 │   ├── ModelRegistry.swift      # Model catalogue and path resolution
 │   ├── Tiler.swift              # Tile splitting, overlap blending, stitching
 │   ├── ImageLoader.swift        # Image reading (PNG, JPEG, TIFF, HEIC)
@@ -83,6 +83,7 @@ superscale/
 ├── Formula/                     # Homebrew formula
 ├── scripts/                     # Release and conversion tooling
 │   ├── convert_model.py         # PyTorch → CoreML conversion
+│   ├── download-models.sh       # Download missing models from GitHub release
 │   ├── release.sh               # Version bump, tag, GitHub release, tap update
 │   └── release-models.sh        # Upload model artefacts to GitHub release
 ├── docs/                        # Project documentation
@@ -95,11 +96,12 @@ superscale/
 
 | Target | Description |
 |--------|-------------|
-| `make build` | Build release binary |
+| `make build` | Download models (if needed) + build release binary |
 | `make test` | Run test suite |
 | `make install` | Build + symlink to `~/.local/bin` |
 | `make release` | Tag, build, push, update Homebrew formula |
 | `make release-models` | Upload model artefacts to GitHub Release |
+| `make download-models` | Download missing models from GitHub release |
 | `make convert-models` | Run PyTorch → CoreML conversion (dev only) |
 | `make clean` | Remove build artefacts |
 | `make sync` | Git add, commit, pull, push |
