@@ -78,6 +78,32 @@ final class ModelRegistryTests: XCTestCase {
         XCTAssertNil(unknown, "Unknown model name should return nil")
     }
 
+    // RT-046: All six models present after build (download-models provisions them)
+    func test_all_models_present_after_build_RT046() {
+        let modelsDir = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("models")
+
+        let expectedModels = [
+            "RealESRGAN_x4plus.mlpackage",
+            "RealESRGAN_x2plus.mlpackage",
+            "RealESRNet_x4plus.mlpackage",
+            "RealESRGAN_x4plus_anime_6B.mlpackage",
+            "realesr-animevideov3.mlpackage",
+            "realesr-general-x4v3.mlpackage",
+        ]
+
+        for filename in expectedModels {
+            let modelPath = modelsDir.appendingPathComponent(filename)
+            XCTAssertTrue(
+                FileManager.default.fileExists(atPath: modelPath.path),
+                "Model \(filename) should be present in models/ directory " +
+                "(run 'make download-models' or 'make build')")
+        }
+    }
+
     // MARK: - Helpers
 
     struct CLIResult {

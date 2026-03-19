@@ -10,16 +10,19 @@ LINK_DIR := $(HOME)/.local/bin
 RELEASE_VERSION ?=
 SKIP_TESTS ?=
 
-.PHONY: help build build-debug test test-one-off clean install uninstall release release-models sync convert-models
+.PHONY: help build build-debug test test-one-off clean install uninstall release release-models sync convert-models download-models
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-build: ## Build release binary
+download-models: ## Download missing models from GitHub release
+	@./scripts/download-models.sh
+
+build: download-models ## Build release binary
 	swift build -c release
 
-build-debug: ## Build debug binary
+build-debug: download-models ## Build debug binary
 	swift build
 
 test: ## Run regression tests

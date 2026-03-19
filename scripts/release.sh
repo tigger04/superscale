@@ -10,7 +10,7 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 TAP_REPO="tigger04/homebrew-tap"
 FORMULA_PATH="Formula/superscale.rb"
 SOURCE_FILE="${PROJECT_ROOT}/Sources/Superscale/SuperscaleCommand.swift"
-DEFAULT_MODEL="RealESRGAN_x4plus.mlpackage"
+MANIFEST="${PROJECT_ROOT}/models/manifest.json"
 
 # --- Helpers ---
 
@@ -139,14 +139,56 @@ curl -sL "${TARBALL_URL}" -o "${TMPDIR_RELEASE}/source.tar.gz"
 SOURCE_SHA256=$(shasum -a 256 "${TMPDIR_RELEASE}/source.tar.gz" | awk '{print $1}')
 echo "  Source SHA256: ${SOURCE_SHA256}"
 
-# --- 6. Get default model SHA256 ---
+# --- 6. Generate model resource blocks ---
 
-MODEL_ZIP="${PROJECT_ROOT}/models/${DEFAULT_MODEL}.zip"
-if [[ ! -f "${MODEL_ZIP}" ]]; then
-    die "Default model zip not found: ${MODEL_ZIP}. Run 'make release-models' first."
+echo "Generating model resource blocks..."
+if [[ ! -f "${MANIFEST}" ]]; then
+    die "models/manifest.json not found. Run 'make release-models' first."
 fi
-MODEL_SHA256=$(shasum -a 256 "${MODEL_ZIP}" | awk '{print $1}')
-echo "  Model SHA256:  ${MODEL_SHA256}"
+
+# Generate resource blocks and install lines from manifest + zip SHA256s
+MODEL_RESOURCES=$(python3 -c "
+import json, subprocess
+from pathlib import Path
+
+manifest = json.loads(Path('${MANIFEST}').read_text())
+release_tag = manifest['release_tag']
+models_dir = Path('${PROJECT_ROOT}/models')
+
+resources = []
+names = []
+for m in manifest['models']:
+    fn = m['filename']
+    zipfile = models_dir / f'{fn}.zip'
+    if not zipfile.exists():
+        print(f'ERROR: {zipfile} not found', flush=True)
+        raise SystemExit(1)
+    # SHA256 of the zip file (what Homebrew downloads)
+    result = subprocess.run(['shasum', '-a', '256', str(zipfile)], capture_output=True, text=True)
+    sha = result.stdout.split()[0]
+    name = fn.replace('.mlpackage', '')
+    resources.append(f'''  resource \"{name}\" do
+    url \"{m['url']}\"
+    sha256 \"{sha}\"
+  end''')
+    names.append(name)
+    print(f'  {name}: {sha[:16]}...')
+
+print('RESOURCES_START')
+print()
+print('\n\n'.join(resources))
+print()
+print('RESOURCES_END')
+print('NAMES_START')
+for n in names:
+    print(f'      {n}')
+print('NAMES_END')
+")
+
+# Extract resource blocks
+RESOURCE_BLOCKS=$(echo "${MODEL_RESOURCES}" | sed -n '/RESOURCES_START/,/RESOURCES_END/p' | sed '1d;$d')
+# Extract model names for install loop
+INSTALL_NAMES=$(echo "${MODEL_RESOURCES}" | sed -n '/NAMES_START/,/NAMES_END/p' | sed '1d;$d')
 
 # --- 7. Update Homebrew formula ---
 
@@ -162,33 +204,31 @@ class Superscale < Formula
   depends_on :macos
   depends_on arch: :arm64
 
-  resource "default_model" do
-    url "https://github.com/tigger04/superscale/releases/download/models-v1/${DEFAULT_MODEL}.zip"
-    sha256 "${MODEL_SHA256}"
-  end
+${RESOURCE_BLOCKS}
 
   def install
     system "swift", "build", "-c", "release", "--disable-sandbox"
     bin.install ".build/release/superscale"
 
-    # Install default model alongside binary (Cellar prefix layout)
-    resource("default_model").stage do
-      (prefix/"models").install "${DEFAULT_MODEL}"
+    # Install all models alongside binary (Cellar prefix layout)
+    %w[
+${INSTALL_NAMES}
+    ].each do |model|
+      resource(model).stage do
+        (prefix/"models").install "#{model}.mlpackage"
+      end
     end
   end
 
   def caveats
     <<~EOS
-      The default model (RealESRGAN_x4plus, 4× upscaling) is bundled.
-
-      Additional models can be downloaded from:
-        https://github.com/tigger04/superscale/releases/tag/models-v1
-
-      Extract .mlpackage files to:
-        ~/Library/Application Support/superscale/models/
+      All six upscaling models are bundled and ready to use.
 
       List available models:
         superscale --list-models
+
+      Auto-detection selects the best model for your image.
+      Override with -m <model-name> if needed.
     EOS
   end
 
