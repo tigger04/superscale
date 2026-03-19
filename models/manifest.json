@@ -7,7 +7,7 @@
       "scale": 4,
       "arch": "RRDBNet",
       "default": true,
-      "sha256": "",
+      "sha256": "34e4be0f99a82cd28fbf761de3ede3e9ff6fa3607b4ddce2f4743e686660f236",
       "url": "https://github.com/tigger04/superscale/releases/download/models-v1/RealESRGAN_x4plus.mlpackage.zip"
     },
     {
@@ -16,7 +16,7 @@
       "scale": 2,
       "arch": "RRDBNet",
       "default": false,
-      "sha256": "",
+      "sha256": "d5cbd517095007f8f5f6bfa00b950130d583feb02a18366937996c105f54d82b",
       "url": "https://github.com/tigger04/superscale/releases/download/models-v1/RealESRGAN_x2plus.mlpackage.zip"
     },
     {
@@ -25,7 +25,7 @@
       "scale": 4,
       "arch": "RRDBNet",
       "default": false,
-      "sha256": "",
+      "sha256": "976b8cbc2c01fb0896fb59d34e7d8a12df37383831aa9a376097b8b4c53c9731",
       "url": "https://github.com/tigger04/superscale/releases/download/models-v1/RealESRNet_x4plus.mlpackage.zip"
     },
     {
@@ -34,7 +34,7 @@
       "scale": 4,
       "arch": "RRDBNet",
       "default": false,
-      "sha256": "",
+      "sha256": "ae5af5d3dd93dec304fc7c58b5c1da7bf2191751cfb1adf81d5f3323ded24ea5",
       "url": "https://github.com/tigger04/superscale/releases/download/models-v1/RealESRGAN_x4plus_anime_6B.mlpackage.zip"
     },
     {
@@ -43,7 +43,7 @@
       "scale": 4,
       "arch": "SRVGGNetCompact",
       "default": false,
-      "sha256": "",
+      "sha256": "45fcba65e58d5ef968cdb834a7f9b1cd8231e6757911425c130180f797b8a09a",
       "url": "https://github.com/tigger04/superscale/releases/download/models-v1/realesr-animevideov3.mlpackage.zip"
     },
     {
@@ -52,7 +52,7 @@
       "scale": 4,
       "arch": "SRVGGNetCompact",
       "default": false,
-      "sha256": "",
+      "sha256": "367f383f8a3e3d3197fccd0875c3936d8ae8e9d70cedbb16182ab91d76d9a914",
       "url": "https://github.com/tigger04/superscale/releases/download/models-v1/realesr-general-x4v3.mlpackage.zip"
     }
   ]
