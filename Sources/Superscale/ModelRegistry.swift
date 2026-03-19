@@ -66,11 +66,20 @@ enum ModelRegistry {
     static var searchPaths: [URL] {
         var paths: [URL] = []
 
-        // 1. Models directory next to the executable (Homebrew Cellar layout)
+        // 1a. Models directory next to the executable (direct install)
         if let execURL = Bundle.main.executableURL {
-            let alongside = execURL.deletingLastPathComponent()
+            let resolved = execURL.resolvingSymlinksInPath()
+            let alongside = resolved.deletingLastPathComponent()
                 .appendingPathComponent("models")
             paths.append(alongside)
+
+            // 1b. Models in Cellar prefix (Homebrew layout: <prefix>/bin/superscale → <prefix>/models/)
+            let cellar = resolved.deletingLastPathComponent()  // bin/
+                .deletingLastPathComponent()  // prefix/
+                .appendingPathComponent("models")
+            if cellar != alongside {
+                paths.append(cellar)
+            }
         }
 
         // 2. User application support directory
