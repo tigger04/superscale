@@ -1,16 +1,68 @@
 # Superscale
 
-Fast AI image upscaling for Mac, built natively for Apple Silicon. Runs inference on the Neural Engine — not CPU — so a 1024×1024 image upscales in seconds, not minutes.
+AI image upscaling that runs entirely on your Mac. No cloud. No API keys. No uploads. Your images stay on your machine.
 
-## Features
+Superscale uses Apple's Neural Engine — dedicated ML hardware built into every M-series chip — to upscale images in seconds. The CPU and GPU stay free for other work.
 
-- **Hardware-accelerated** — runs CoreML models on Apple's Neural Engine for maximum throughput on M1/M2/M3/M4
-- **Auto-detect content type** — automatically selects the best model for your image (photo, illustration, anime) using Apple's Vision framework
-- **2× and 4× upscaling** with six models optimized for different content types
-- **Batch processing** — upscale entire directories of images
-- **Zero dependencies** — single binary, all models bundled, installable in one command
+```bash
+brew install tigger04/tap/superscale
+superscale photo.png
+```
 
-## Quickstart
+That's it. One command to install, one command to upscale.
+
+## Why Superscale?
+
+- **Private** — images never leave your machine. No cloud processing, no accounts, no internet required after install.
+- **Fast** — runs on the Neural Engine, not CPU. A 1024×1024 image upscales 4× in seconds.
+- **Smart** — auto-detects content type (photo, illustration, anime) and selects the best model using Apple's Vision framework.
+- **Simple** — single binary, all models bundled, zero dependencies. Works offline.
+
+## Usage
+
+```bash
+# Upscale an image — auto-detects best model
+superscale photo.png
+
+# Specify scale factor and output directory
+superscale -s 2 -o upscaled/ photo.png
+
+# Process multiple images at once
+superscale -o output/ *.png
+
+# Override model selection (see table below)
+superscale -m realesrgan-anime-6b illustration.png
+
+# List available models
+superscale --list-models
+```
+
+## Models
+
+Six models are included, each optimized for different content. Auto-detection picks the right one, or you can override with `-m`:
+
+| CLI name (`-m`) | Scale | Best for |
+|-----------------|-------|----------|
+| `realesrgan-x4plus` | 4× | General photos (default) |
+| `realesrgan-x2plus` | 2× | General photos, lighter upscale |
+| `realesrnet-x4plus` | 4× | Photos, PSNR-oriented (less sharpening) |
+| `realesrgan-anime-6b` | 4× | Anime/illustration |
+| `realesr-animevideov3` | 4× | Anime video frames |
+| `realesr-general-x4v3` | 4× | General scenes, compact model |
+
+## Face enhancement (optional)
+
+Superscale can enhance faces in upscaled photos using GFPGAN. This model is not bundled due to its non-commercial licence — you download it separately:
+
+```bash
+superscale --download-face-model --accept-licence
+```
+
+Once installed, face enhancement runs automatically on every upscale. Use `--no-face-enhance` to skip it.
+
+## Install
+
+### Homebrew (recommended)
 
 ```bash
 brew install tigger04/tap/superscale
@@ -24,24 +76,7 @@ cd superscale
 make install
 ```
 
-### Usage
-
-```bash
-# Upscale an image — auto-detects best model
-superscale photo.png
-
-# Specify scale factor and output directory
-superscale -s 2 -o upscaled/ photo.png
-
-# Process multiple images
-superscale -o output/ *.png
-
-# Override model selection
-superscale -m realesrgan-anime-6b illustration.png
-
-# List available models
-superscale --list-models
-```
+Requires Xcode Command Line Tools (`xcode-select --install`).
 
 ## Requirements
 
@@ -49,10 +84,6 @@ superscale --list-models
 - Apple Silicon (M1, M2, M3, M4)
 
 No other dependencies. Everything runs on built-in system frameworks.
-
-### Building from source
-
-If building from source rather than installing via Homebrew, you'll need Xcode Command Line Tools (`xcode-select --install`).
 
 ## Documentation
 
@@ -62,7 +93,6 @@ If building from source rather than installing via Homebrew, you'll need Xcode C
 | [Architecture](docs/architecture.md) | System design, data flow, component overview |
 | [Testing](docs/testing.md) | Test strategy, coverage, and conventions |
 | [Implementation plan](docs/implementation-plan.md) | Phased delivery plan |
-| [Model conversion](docs/model-conversion.md) | How to convert PyTorch checkpoints to CoreML |
 | [Model licensing](docs/model-licensing.md) | Licence status of bundled model weights |
 
 ## Project structure
@@ -106,23 +136,10 @@ superscale/
 | `make clean` | Remove build artefacts |
 | `make sync` | Git add, commit, pull, push |
 
-## Supported models
-
-| Model | Scale | Best for |
-|-------|-------|----------|
-| RealESRGAN_x4plus | 4× | General photos (default) |
-| RealESRGAN_x2plus | 2× | General photos, lighter upscale |
-| RealESRNet_x4plus | 4× | Photos, PSNR-oriented (less sharpening) |
-| RealESRGAN_x4plus_anime_6B | 4× | Anime/illustration |
-| realesr-animevideov3 | 4× | Anime video frames |
-| realesr-general-x4v3 | 4× | General scenes, compact model |
-
-All models are converted from xinntao's [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) weights (BSD-3-Clause). See [model licensing](docs/model-licensing.md) for details.
-
 ## Licence
 
 MIT. Copyright Taḋg Paul.
 
 Bundled model weights (Real-ESRGAN) are BSD-3-Clause (Copyright Xintao Wang, 2021). See [THIRD_PARTY_LICENSES](THIRD_PARTY_LICENSES).
 
-The optional GFPGAN face enhancement model (`--download-face-model`) is **not bundled** and contains non-commercial components (StyleGAN2, DFDNet). See [model licensing](docs/model-licensing.md) for details.
+The optional GFPGAN face enhancement model (`--download-face-model`) is **not bundled** and contains non-commercial components (StyleGAN2, DFDNet). The licence applies to the model weights, not to output images. See [model licensing](docs/model-licensing.md) for details.

@@ -21,7 +21,7 @@ struct Superscale: ParsableCommand {
     @Option(name: .shortAndLong, help: "Output directory.")
     var output: String?
 
-    @Option(name: .shortAndLong, help: "Model name (auto-detected if omitted).")
+    @Option(name: .shortAndLong, help: "Model name (auto-detected if omitted; see --list-models).")
     var model: String?
 
     @Option(name: .long, help: "Tile size in pixels (smaller = less memory, more passes).")

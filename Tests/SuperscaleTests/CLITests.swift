@@ -132,6 +132,19 @@ final class CLITests: XCTestCase {
         }
     }
 
+    // RT-048: --help text for -m tells users about --list-models
+    func test_cli_help_model_option_references_list_models_RT048() throws {
+        let result = try runCLI(["--help"])
+        XCTAssertEqual(result.exitCode, 0)
+        // ArgumentParser may wrap help text across lines, so normalize whitespace
+        let normalized = result.stdout
+            .components(separatedBy: .whitespacesAndNewlines)
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+        XCTAssertTrue(normalized.contains("see --list-models"),
+                      "Help for -m should say 'see --list-models' — stdout: \(result.stdout)")
+    }
+
     // RT-037: Explicit -m flag bypasses auto-detection
     func test_cli_explicit_model_bypasses_detection_RT037() throws {
         let modelPath = projectRoot.appendingPathComponent("models/RealESRNet_x4plus.mlpackage")
