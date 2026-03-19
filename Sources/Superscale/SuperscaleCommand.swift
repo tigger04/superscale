@@ -30,7 +30,21 @@ struct Superscale: ParsableCommand {
     @Flag(name: .long, help: "List available models.")
     var listModels: Bool = false
 
+    @Flag(name: .long, help: "Enable face enhancement (requires GFPGAN model).")
+    var faceEnhance: Bool = false
+
+    @Flag(name: .long, help: "Download the GFPGAN face enhancement model.")
+    var downloadFaceModel: Bool = false
+
+    @Flag(name: .long, help: "Accept the GFPGAN licence (non-commercial use only).")
+    var acceptLicence: Bool = false
+
     mutating func run() throws {
+        if downloadFaceModel {
+            try handleDownloadFaceModel()
+            return
+        }
+
         if listModels {
             print("Models:")
             for model in ModelRegistry.models {
@@ -83,6 +97,17 @@ struct Superscale: ParsableCommand {
                 "Unknown model '\(resolvedModelName)'. Available: \(available)")
         }
 
+        // Validate face enhancement model if requested
+        if faceEnhance {
+            guard FaceModelRegistry.isInstalled else {
+                fputs("Error: Face enhancement model not found.\n", stderr)
+                fputs("Download it with: superscale --download-face-model\n", stderr)
+                fputs("Note: GFPGAN is for non-commercial use only " +
+                      "(StyleGAN2/DFDNet licence restrictions).\n", stderr)
+                throw ExitCode.failure
+            }
+        }
+
         // Create pipeline
         let pipeline = try Pipeline(
             modelName: resolvedModelName, tileSize: tileSize)
@@ -121,5 +146,59 @@ struct Superscale: ParsableCommand {
                 throw ExitCode.failure
             }
         }
+    }
+
+    /// Handle --download-face-model: download GFPGAN weights with licence notice.
+    private func handleDownloadFaceModel() throws {
+        let licenceNotice = """
+        GFPGAN Face Enhancement Model — Licence Notice
+
+        The GFPGAN model contains components with non-commercial licences:
+          - StyleGAN2 (NVIDIA): non-commercial use only
+          - DFDNet: CC BY-NC-SA 4.0 (non-commercial, share-alike)
+
+        By downloading this model, you acknowledge that it may only be used
+        for non-commercial purposes.
+        """
+
+        if !acceptLicence {
+            // Check if we have a terminal for interactive prompt
+            if isatty(fileno(stdin)) != 0 {
+                fputs("\(licenceNotice)\n", stderr)
+                fputs("Do you accept these terms? [y/N] ", stderr)
+                guard let response = readLine(),
+                      response.lowercased().hasPrefix("y") else {
+                    fputs("Download cancelled.\n", stderr)
+                    throw ExitCode.failure
+                }
+            } else {
+                fputs("Error: Licence acceptance required.\n", stderr)
+                fputs("Run with --accept-licence to accept non-commercial terms.\n", stderr)
+                throw ExitCode.failure
+            }
+        }
+
+        fputs("Downloading GFPGAN model...\n", stderr)
+
+        let destDir = ModelRegistry.userModelsDirectory
+        try FileManager.default.createDirectory(
+            at: destDir, withIntermediateDirectories: true)
+
+        let destPath = destDir.appendingPathComponent(
+            FaceModelRegistry.modelFilename)
+
+        if FileManager.default.fileExists(atPath: destPath.path) {
+            fputs("Face model already installed at \(destPath.path)\n", stderr)
+            return
+        }
+
+        // Download the CoreML model from our release
+        let downloadURL = FaceModelRegistry.downloadURL
+        fputs("Downloading from \(downloadURL)...\n", stderr)
+
+        let data = try Data(contentsOf: downloadURL)
+        try data.write(to: destPath)
+
+        fputs("Face model installed at \(destPath.path)\n", stderr)
     }
 }
