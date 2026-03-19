@@ -63,6 +63,7 @@ If building from source rather than installing via Homebrew, you'll need Xcode C
 | [Architecture](docs/architecture.md) | System design, data flow, component overview |
 | [Testing](docs/testing.md) | Test strategy, coverage, and conventions |
 | [Implementation plan](docs/implementation-plan.md) | Phased delivery plan |
+| [Model conversion](docs/model-conversion.md) | How to convert PyTorch checkpoints to CoreML |
 | [Model licensing](docs/model-licensing.md) | Licence status of bundled model weights |
 
 ## Project structure
