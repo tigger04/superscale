@@ -30,8 +30,8 @@ struct Superscale: ParsableCommand {
     @Flag(name: .long, help: "List available models.")
     var listModels: Bool = false
 
-    @Flag(name: .long, help: "Enable face enhancement (requires GFPGAN model).")
-    var faceEnhance: Bool = false
+    @Flag(name: .long, help: "Skip face enhancement even when the face model is installed.")
+    var noFaceEnhance: Bool = false
 
     @Flag(name: .long, help: "Download the GFPGAN face enhancement model.")
     var downloadFaceModel: Bool = false
@@ -97,15 +97,10 @@ struct Superscale: ParsableCommand {
                 "Unknown model '\(resolvedModelName)'. Available: \(available)")
         }
 
-        // Validate face enhancement model if requested
-        if faceEnhance {
-            guard FaceModelRegistry.isInstalled else {
-                fputs("Error: Face enhancement model not found.\n", stderr)
-                fputs("Download it with: superscale --download-face-model\n", stderr)
-                fputs("Note: GFPGAN is for non-commercial use only " +
-                      "(StyleGAN2/DFDNet licence restrictions).\n", stderr)
-                throw ExitCode.failure
-            }
+        // Face enhancement: automatic when model is present, unless --no-face-enhance
+        let useFaceEnhance = !noFaceEnhance && FaceModelRegistry.isInstalled
+        if useFaceEnhance {
+            fputs("Face enhancement enabled (GFPGAN model found).\n", stderr)
         }
 
         // Create pipeline

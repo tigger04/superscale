@@ -1,5 +1,5 @@
 // ABOUTME: Tests for face enhancement — GFPGAN download, CLI flags, face detection.
-// ABOUTME: Validates AC1.1–AC1.6 for the optional face enhancement feature.
+// ABOUTME: Validates AC1.1–AC1.7 for the optional face enhancement feature.
 
 import XCTest
 import CoreGraphics
@@ -18,25 +18,36 @@ final class FaceEnhancerTests: XCTestCase {
         projectRoot.appendingPathComponent("Tests/images")
     }
 
-    // RT-041: --face-enhance without GFPGAN model → exit 1 with download instructions
-    func test_face_enhance_without_model_shows_download_instructions_RT041() throws {
-        // Ensure the GFPGAN model is NOT present in any search path
-        let faceModelPath = ModelRegistry.userModelsDirectory
-            .appendingPathComponent("GFPGANv1.4.mlpackage")
-        try XCTSkipIf(FileManager.default.fileExists(atPath: faceModelPath.path),
+    // RT-041: Without face model, upscaling succeeds and face enhancement is silently skipped
+    func test_upscale_without_face_model_succeeds_silently_RT041() throws {
+        // Ensure the GFPGAN model is NOT present
+        try XCTSkipIf(FaceModelRegistry.isInstalled,
                       "GFPGAN model is present — cannot test missing model scenario")
+
+        let modelPath = projectRoot.appendingPathComponent("models/RealESRGAN_x2plus.mlpackage")
+        try XCTSkipIf(!FileManager.default.fileExists(atPath: modelPath.path),
+                      "x2plus model not found")
 
         let input = testImagesDir.appendingPathComponent("remy2.jpg")
         try XCTSkipIf(!FileManager.default.fileExists(atPath: input.path),
                       "remy2.jpg not found")
 
-        let result = try runCLI(["--face-enhance", input.path])
+        let outputDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("superscale_noface_\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: outputDir) }
 
-        XCTAssertNotEqual(result.exitCode, 0,
-                          "Should fail when face model is not present")
-        XCTAssertTrue(
-            result.stderr.lowercased().contains("download"),
-            "Error should mention downloading the face model — stderr: \(result.stderr)")
+        let result = try runCLI([
+            input.path,
+            "-o", outputDir.path,
+            "-m", "realesrgan-x2plus"
+        ])
+
+        // Should succeed — face enhancement silently skipped when model not present
+        XCTAssertEqual(result.exitCode, 0,
+                       "Upscale should succeed without face model. stderr: \(result.stderr)")
+        // Should NOT mention face enhancement
+        XCTAssertFalse(result.stderr.contains("Face enhancement enabled"),
+                       "Should not mention face enhancement when model is absent")
     }
 
     // RT-042: GFPGAN excluded from git, formula, and distribution
@@ -69,9 +80,14 @@ final class FaceEnhancerTests: XCTestCase {
         let trackedFiles = String(
             data: pipe.fileHandleForReading.readDataToEndOfFile(),
             encoding: .utf8) ?? ""
-        XCTAssertFalse(
-            trackedFiles.lowercased().contains("gfpgan"),
-            "No GFPGAN files should be tracked in git")
+        // Exclude scripts — only flag model/weight files containing "gfpgan"
+        let gfpganFiles = trackedFiles
+            .components(separatedBy: "\n")
+            .filter { $0.lowercased().contains("gfpgan") }
+            .filter { !$0.hasPrefix("scripts/") }
+        XCTAssertTrue(
+            gfpganFiles.isEmpty,
+            "No GFPGAN model files should be tracked in git: \(gfpganFiles)")
     }
 
     // RT-043: Face detection runs without error and returns face rectangles

@@ -43,11 +43,13 @@ final class LicensingTests: XCTestCase {
 
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         let trackedFiles = String(data: data, encoding: .utf8) ?? ""
+        // Exclude scripts — only flag model/weight files containing "gfpgan"
         let gfpganFiles = trackedFiles
             .components(separatedBy: "\n")
             .filter { $0.lowercased().contains("gfpgan") }
+            .filter { !$0.hasPrefix("scripts/") }
         XCTAssertTrue(gfpganFiles.isEmpty,
-                      "GFPGAN files must not be tracked: \(gfpganFiles)")
+                      "GFPGAN model files must not be tracked: \(gfpganFiles)")
 
         // Verify .gitignore covers model weight formats
         let gitignoreURL = projectRoot.appendingPathComponent(".gitignore")
