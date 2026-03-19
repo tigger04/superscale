@@ -1,14 +1,8 @@
-# ABOUTME: Homebrew formula for Superscale.
-# ABOUTME: Updated automatically by scripts/release.sh — do not edit manually.
-#
-# This file is a local reference copy. The canonical formula
-# lives in the tigger04/homebrew-tap repository.
-
 class Superscale < Formula
   desc "AI image upscaling for Apple Silicon"
   homepage "https://github.com/tigger04/superscale"
-  url "https://github.com/tigger04/superscale/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "PLACEHOLDER"
+  url "https://github.com/tigger04/superscale/archive/refs/tags/v0.2.0.tar.gz"
+  sha256 "0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5"
   license "MIT"
 
   depends_on :macos
@@ -45,7 +39,7 @@ class Superscale < Formula
   end
 
   test do
-    assert_match version.to_s, shell_output("#{bin}/superscale --version")
+    assert_match "0.2.0", shell_output("#{bin}/superscale --version")
     assert_match "realesrgan-x4plus", shell_output("#{bin}/superscale --list-models")
   end
 end
