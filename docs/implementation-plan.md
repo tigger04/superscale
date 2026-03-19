@@ -1,4 +1,4 @@
-<!-- Version: 0.8 | Last updated: 2026-03-19 -->
+<!-- Version: 0.9 | Last updated: 2026-03-19 -->
 
 # Implementation plan
 
@@ -22,7 +22,7 @@ Issues should be tackled in this order. Where multiple issues share a step numbe
 | 4 | [#9](https://github.com/tigger04/superscale/issues/9) | Phase 3d: Pipeline integration | #6, #7, #8 | **closed** |
 | 5 | [#10](https://github.com/tigger04/superscale/issues/10) | Phase 3e: CLI polish | #9 | **closed** |
 | 6 | [#5](https://github.com/tigger04/superscale/issues/5) | Phase 4: Licensing review | — (gate before #12) | **implemented** (all ACs passing) |
-| 7 | [#12](https://github.com/tigger04/superscale/issues/12) | Phase 5: Distribution (Homebrew) | #5, #10, #18 | open |
+| 7 | [#12](https://github.com/tigger04/superscale/issues/12) | Phase 5: Distribution (Homebrew) | #5, #10, #18 | **implemented** (awaiting public repo for Homebrew test) |
 | 8 | [#13](https://github.com/tigger04/superscale/issues/13) | Phase 6: Model download (on-demand) | #12 | open |
 | 9 | [#1](https://github.com/tigger04/superscale/issues/1) | Phase 7: Face enhancement (GFPGAN) | #11 | open |
 | 10 | [#14](https://github.com/tigger04/superscale/issues/14) | Phase 8: macOS SwiftUI GUI | #11 | open |
@@ -320,6 +320,7 @@ Licensing is a gate — it must be resolved before distribution (Phase 5). The p
 | 0.6 | 2026-03-18 | Added status column to execution order. Marked #2, #3, #18 as closed. Updated roadmap with completion markers. |
 | 0.7 | 2026-03-18 | Marked #4 (PoC) and #5 (licensing) as implemented. |
 | 0.8 | 2026-03-19 | Phase 3 complete — closed #6, #7, #8, #9, #10. CLI fully functional. |
+| 0.9 | 2026-03-19 | Phase 5 implemented — release script, Homebrew formula, first release v0.2.0. |
 
 ## See also
 
