@@ -123,4 +123,6 @@ All models are converted from xinntao's [Real-ESRGAN](https://github.com/xinntao
 
 MIT. Copyright Taḋg Paul.
 
-Model weights are BSD-3-Clause (Copyright Xintao Wang, 2021). See [THIRD_PARTY_LICENSES](THIRD_PARTY_LICENSES).
+Bundled model weights (Real-ESRGAN) are BSD-3-Clause (Copyright Xintao Wang, 2021). See [THIRD_PARTY_LICENSES](THIRD_PARTY_LICENSES).
+
+The optional GFPGAN face enhancement model (`--download-face-model`) is **not bundled** and contains non-commercial components (StyleGAN2, DFDNet). See [model licensing](docs/model-licensing.md) for details.
