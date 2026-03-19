@@ -24,6 +24,9 @@ struct Superscale: ParsableCommand {
     @Option(name: .shortAndLong, help: "Model name.")
     var model: String = "realesrgan-x4plus"
 
+    @Option(name: .long, help: "Tile size in pixels (smaller = less memory, more passes).")
+    var tileSize: Int?
+
     @Flag(name: .long, help: "List available models.")
     var listModels: Bool = false
 
@@ -45,8 +48,79 @@ struct Superscale: ParsableCommand {
             throw ValidationError("No input files specified.")
         }
 
-        // TODO: Phase 2 — wire up CoreML pipeline
-        fputs("Superscale v0.1.0 — not yet implemented. See docs/implementation-plan.md\n", stderr)
-        throw ExitCode.failure
+        // Resolve model — if -s is specified, pick the matching scale variant
+        let modelName = resolveModelName()
+
+        // Validate model exists
+        guard let modelInfo = ModelRegistry.model(named: modelName) else {
+            let available = ModelRegistry.models.map { $0.name }.joined(separator: ", ")
+            throw ValidationError("Unknown model '\(modelName)'. Available: \(available)")
+        }
+
+        // Create output directory if needed
+        let outputDir: URL?
+        if let outputPath = output {
+            let dirURL = URL(fileURLWithPath: outputPath)
+            if !FileManager.default.fileExists(atPath: dirURL.path) {
+                try FileManager.default.createDirectory(
+                    at: dirURL, withIntermediateDirectories: true)
+            }
+            outputDir = dirURL
+        } else {
+            outputDir = nil
+        }
+
+        // Create pipeline
+        let pipeline = try Pipeline(
+            modelName: modelName, tileSize: tileSize)
+        pipeline.onProgress = { message in
+            fputs("\(message)\n", stderr)
+        }
+
+        // Process each input file, accumulating errors
+        var errors: [(String, Error)] = []
+
+        for inputPath in inputs {
+            let inputURL = URL(fileURLWithPath: inputPath)
+            let outputFilename = ImageWriter.outputFilename(
+                for: inputPath, scale: modelInfo.scale)
+            let outputURL: URL
+            if let dir = outputDir {
+                outputURL = dir.appendingPathComponent(outputFilename)
+            } else {
+                outputURL = inputURL.deletingLastPathComponent()
+                    .appendingPathComponent(outputFilename)
+            }
+
+            do {
+                try pipeline.process(input: inputURL, output: outputURL)
+            } catch {
+                errors.append((inputPath, error))
+                fputs("Error processing \(inputPath): \(error)\n", stderr)
+            }
+        }
+
+        if !errors.isEmpty {
+            let total = inputs.count
+            let failed = errors.count
+            fputs("\(failed) of \(total) file(s) failed.\n", stderr)
+            if failed == total {
+                throw ExitCode.failure
+            }
+        }
+    }
+
+    /// Resolve the model name, matching scale factor if the user specified -s
+    /// with the default model.
+    private func resolveModelName() -> String {
+        // If the user explicitly set -m, use it as-is
+        if model != "realesrgan-x4plus" {
+            return model
+        }
+        // If -s 2 was specified with the default model, switch to x2plus
+        if scale == 2 {
+            return "realesrgan-x2plus"
+        }
+        return model
     }
 }

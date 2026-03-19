@@ -2,6 +2,8 @@
 // ABOUTME: Validates command-line argument parsing and basic invocation.
 
 import XCTest
+import CoreGraphics
+import ImageIO
 
 final class CLITests: XCTestCase {
 
@@ -32,7 +34,116 @@ final class CLITests: XCTestCase {
         XCTAssertNotEqual(result.exitCode, 0, "Expected non-zero exit code with no input")
     }
 
+    // RT-024: Batch processing — multiple input files produce multiple outputs
+    func test_cli_batch_processes_multiple_files_RT024() throws {
+        let modelPath = projectRoot.appendingPathComponent("models/RealESRGAN_x2plus.mlpackage")
+        try XCTSkipIf(!FileManager.default.fileExists(atPath: modelPath.path),
+                      "x2plus model not found")
+
+        let input1 = testImagesDir.appendingPathComponent("remy.png")
+        let input2 = testImagesDir.appendingPathComponent("remy2.jpg")
+        try XCTSkipIf(!FileManager.default.fileExists(atPath: input1.path), "remy.png not found")
+        try XCTSkipIf(!FileManager.default.fileExists(atPath: input2.path), "remy2.jpg not found")
+
+        let outputDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("superscale_batch_\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: outputDir) }
+
+        let result = try runCLI([
+            input1.path, input2.path,
+            "-o", outputDir.path,
+            "-m", "realesrgan-x2plus"
+        ])
+
+        XCTAssertEqual(result.exitCode, 0, "Batch processing should succeed. stderr: \(result.stderr)")
+
+        let output1 = outputDir.appendingPathComponent("remy_2x.png")
+        let output2 = outputDir.appendingPathComponent("remy2_2x.jpg")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: output1.path),
+                      "First output file should exist at \(output1.path)")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: output2.path),
+                      "Second output file should exist at \(output2.path)")
+    }
+
+    // RT-025: -o creates output directory if it doesn't exist
+    func test_cli_creates_output_directory_RT025() throws {
+        let modelPath = projectRoot.appendingPathComponent("models/RealESRGAN_x2plus.mlpackage")
+        try XCTSkipIf(!FileManager.default.fileExists(atPath: modelPath.path),
+                      "x2plus model not found")
+
+        let input = testImagesDir.appendingPathComponent("remy2.jpg")
+        try XCTSkipIf(!FileManager.default.fileExists(atPath: input.path), "remy2.jpg not found")
+
+        let outputDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("superscale_mkdir_\(UUID().uuidString)")
+            .appendingPathComponent("nested")
+        defer {
+            try? FileManager.default.removeItem(
+                at: outputDir.deletingLastPathComponent())
+        }
+
+        XCTAssertFalse(FileManager.default.fileExists(atPath: outputDir.path),
+                       "Output dir should not exist yet")
+
+        let result = try runCLI([
+            input.path,
+            "-o", outputDir.path,
+            "-m", "realesrgan-x2plus"
+        ])
+
+        XCTAssertEqual(result.exitCode, 0, "Should succeed. stderr: \(result.stderr)")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outputDir.path),
+                      "Output directory should be created")
+    }
+
+    // RT-026: -s 2 produces 2× output dimensions
+    func test_cli_scale_flag_produces_correct_dimensions_RT026() throws {
+        let modelPath = projectRoot.appendingPathComponent("models/RealESRGAN_x2plus.mlpackage")
+        try XCTSkipIf(!FileManager.default.fileExists(atPath: modelPath.path),
+                      "x2plus model not found")
+
+        let input = testImagesDir.appendingPathComponent("remy2.jpg")
+        try XCTSkipIf(!FileManager.default.fileExists(atPath: input.path), "remy2.jpg not found")
+
+        let outputDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("superscale_scale_\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: outputDir) }
+
+        let result = try runCLI([
+            input.path,
+            "-o", outputDir.path,
+            "-s", "2",
+            "-m", "realesrgan-x2plus"
+        ])
+
+        XCTAssertEqual(result.exitCode, 0, "Should succeed. stderr: \(result.stderr)")
+
+        let outputPath = outputDir.appendingPathComponent("remy2_2x.jpg")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outputPath.path),
+                      "Output should exist at \(outputPath.path)")
+
+        // Verify dimensions — input is 1024×1024, so 2× should be 2048×2048
+        if let source = CGImageSourceCreateWithURL(outputPath as CFURL, nil),
+           let image = CGImageSourceCreateImageAtIndex(source, 0, nil) {
+            XCTAssertEqual(image.width, 2048, "Output width should be 2× input")
+            XCTAssertEqual(image.height, 2048, "Output height should be 2× input")
+        } else {
+            XCTFail("Could not read output image")
+        }
+    }
+
     // MARK: - Helpers
+
+    private var projectRoot: URL {
+        URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+    }
+
+    private var testImagesDir: URL {
+        projectRoot.appendingPathComponent("Tests/images")
+    }
 
     struct CLIResult {
         let exitCode: Int32
