@@ -70,19 +70,25 @@ If building from source rather than installing via Homebrew, you'll need Xcode C
 
 ```
 superscale/
-├── Sources/Superscale/       # Swift source
-│   ├── SuperscaleCommand.swift  # CLI entry point
+├── Sources/Superscale/          # Swift source
+│   ├── SuperscaleCommand.swift  # CLI entry point (ArgumentParser)
+│   ├── Pipeline.swift           # End-to-end upscaling orchestration
+│   ├── CoreMLInference.swift    # CoreML model loading and inference
 │   ├── ModelRegistry.swift      # Model catalogue and path resolution
-│   └── CoreMLInference.swift    # CoreML model loading and inference
-├── Tests/SuperscaleTests/    # XCTest suite
-├── models/                   # Model manifest (manifest.json tracked; .mlpackage gitignored)
-├── Formula/                  # Homebrew formula
-├── scripts/                  # Release and conversion tooling
-│   └── convert_model.py      # PyTorch → CoreML conversion script
-├── docs/                     # Project documentation
-├── Package.swift             # Swift package manifest
-├── Makefile                  # Build, test, install, release targets
-└── LICENSE                   # MIT licence
+│   ├── Tiler.swift              # Tile splitting, overlap blending, stitching
+│   ├── ImageLoader.swift        # Image reading (PNG, JPEG, TIFF, HEIC)
+│   └── ImageWriter.swift        # Image writing with colour profile preservation
+├── Tests/SuperscaleTests/       # XCTest suite
+├── models/                      # Model manifest (manifest.json tracked; .mlpackage gitignored)
+├── Formula/                     # Homebrew formula
+├── scripts/                     # Release and conversion tooling
+│   ├── convert_model.py         # PyTorch → CoreML conversion
+│   ├── release.sh               # Version bump, tag, GitHub release, tap update
+│   └── release-models.sh        # Upload model artefacts to GitHub release
+├── docs/                        # Project documentation
+├── Package.swift                # Swift package manifest
+├── Makefile                     # Build, test, install, release targets
+└── LICENSE                      # MIT licence
 ```
 
 ## Makefile targets

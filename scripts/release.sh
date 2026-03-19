@@ -209,7 +209,9 @@ git push
 
 # Push formula to tap repo
 echo "Pushing formula to tap (${TAP_REPO})..."
-ENCODED_CONTENT=$(echo "${FORMULA_CONTENT}" | base64)
+B64_FILE=$(mktemp)
+PAYLOAD_FILE=$(mktemp)
+base64 < "${PROJECT_ROOT}/${FORMULA_PATH}" | tr -d '\n' > "${B64_FILE}"
 
 # Check if formula already exists in tap
 EXISTING_SHA=""
@@ -217,20 +219,22 @@ if gh api "repos/${TAP_REPO}/contents/${FORMULA_PATH}" > /dev/null 2>&1; then
     EXISTING_SHA=$(gh api "repos/${TAP_REPO}/contents/${FORMULA_PATH}" --jq '.sha')
 fi
 
-if [[ -n "${EXISTING_SHA}" ]]; then
-    gh api "repos/${TAP_REPO}/contents/${FORMULA_PATH}" \
-        --method PUT \
-        -f message="Update superscale to ${NEW_VERSION}" \
-        -f content="${ENCODED_CONTENT}" \
-        -f sha="${EXISTING_SHA}" \
-        > /dev/null
-else
-    gh api "repos/${TAP_REPO}/contents/${FORMULA_PATH}" \
-        --method PUT \
-        -f message="Add superscale ${NEW_VERSION}" \
-        -f content="${ENCODED_CONTENT}" \
-        > /dev/null
-fi
+python3 -c "
+import json, sys
+with open('${B64_FILE}') as f:
+    content = f.read().strip()
+payload = {'message': 'Update superscale to ${NEW_VERSION}', 'content': content}
+sha = '${EXISTING_SHA}'
+if sha:
+    payload['sha'] = sha
+with open('${PAYLOAD_FILE}', 'w') as f:
+    json.dump(payload, f)
+"
+
+gh api "repos/${TAP_REPO}/contents/${FORMULA_PATH}" \
+    --method PUT --input "${PAYLOAD_FILE}" > /dev/null
+
+rm -f "${B64_FILE}" "${PAYLOAD_FILE}"
 
 echo ""
 echo "=== Release Complete ==="
