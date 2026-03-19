@@ -76,6 +76,10 @@ enum ModelRegistry {
         // 2. User application support directory
         paths.append(userModelsDirectory)
 
+        // 3. Working directory models/ (development and testing)
+        let cwd = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
+        paths.append(cwd.appendingPathComponent("models"))
+
         return paths
     }
 
@@ -93,6 +97,23 @@ enum ModelRegistry {
     /// Find a model by its CLI name.
     static func model(named name: String) -> ModelInfo? {
         models.first { $0.name == name }
+    }
+
+    /// Resolve a CLI model name to the URL of its `.mlpackage` file.
+    ///
+    /// Searches all known paths in priority order. Returns nil if the model
+    /// name is unknown or the package file is not installed at any location.
+    static func modelURL(for name: String) -> URL? {
+        guard let model = model(named: name) else {
+            return nil
+        }
+        for path in searchPaths {
+            let url = path.appendingPathComponent(model.filename)
+            if FileManager.default.fileExists(atPath: url.path) {
+                return url
+            }
+        }
+        return nil
     }
 
     /// The default model (always present).

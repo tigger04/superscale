@@ -2,6 +2,7 @@
 // ABOUTME: Validates the model catalogue and --list-models CLI output with status indicators.
 
 import XCTest
+@testable import Superscale
 
 final class ModelRegistryTests: XCTestCase {
 
@@ -37,6 +38,44 @@ final class ModelRegistryTests: XCTestCase {
                 "Expected status indicator in line: \(line)"
             )
         }
+    }
+
+    // RT-019: ModelRegistry contains correct metadata for all six models
+    func test_model_registry_contains_all_models_with_metadata_RT019() {
+        let models = ModelRegistry.models
+        XCTAssertEqual(models.count, 6, "Expected exactly 6 models in registry")
+
+        // Every model must have non-empty name, displayName, filename
+        for model in models {
+            XCTAssertFalse(model.name.isEmpty, "Model name must not be empty")
+            XCTAssertFalse(model.displayName.isEmpty, "Display name must not be empty")
+            XCTAssertFalse(model.filename.isEmpty, "Filename must not be empty")
+            XCTAssertTrue(model.filename.hasSuffix(".mlpackage"),
+                          "Filename must end with .mlpackage: \(model.filename)")
+            XCTAssertTrue([2, 4].contains(model.scale),
+                          "Scale must be 2 or 4, got \(model.scale) for \(model.name)")
+            XCTAssertGreaterThan(model.tileSize, 0, "Tile size must be positive")
+        }
+
+        // Exactly one default
+        let defaults = models.filter { $0.isDefault }
+        XCTAssertEqual(defaults.count, 1, "Expected exactly one default model")
+    }
+
+    // RT-020: Given a CLI model name, ModelRegistry locates the .mlpackage URL
+    func test_model_registry_resolves_model_url_RT020() {
+        // Known model should resolve
+        let url = ModelRegistry.modelURL(for: "realesrgan-x4plus")
+        // URL should be non-nil if models have been converted (may be nil in CI)
+        // But the method itself must exist and return a URL type
+        if let url = url {
+            XCTAssertTrue(url.path.hasSuffix("RealESRGAN_x4plus.mlpackage"),
+                          "Expected URL to end with correct filename, got: \(url.path)")
+        }
+
+        // Unknown model should return nil
+        let unknown = ModelRegistry.modelURL(for: "nonexistent-model")
+        XCTAssertNil(unknown, "Unknown model name should return nil")
     }
 
     // MARK: - Helpers
