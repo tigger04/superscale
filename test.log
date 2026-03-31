@@ -1,0 +1,239 @@
+xcodebuild test -project SuperscaleApp/SuperscaleApp.xcodeproj -scheme SuperscaleWithTests -destination 'platform=macOS'
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test -project SuperscaleApp/SuperscaleApp.xcodeproj -scheme SuperscaleWithTests -destination platform=macOS
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  swift-argument-parser: https://github.com/apple/swift-argument-parser.git @ 1.7.1
+  Superscale: /Users/tigger/code/tigoss/superscale @ local
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00008122-001C60E43E86001C, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00008122-001C60E43E86001C, name:My Mac }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (4 targets)
+    Target 'SuperscaleAppUITests' in project 'SuperscaleApp'
+        ➜ Explicit dependency on target 'Superscale' in project 'SuperscaleApp'
+    Target 'Superscale' in project 'SuperscaleApp'
+        ➜ Explicit dependency on target 'SuperscaleKit' in project 'Superscale'
+    Target 'SuperscaleKit' in project 'Superscale'
+        ➜ Explicit dependency on target 'SuperscaleKit' in project 'Superscale'
+    Target 'SuperscaleKit' in project 'Superscale' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: 3cfa83d3f3ced2bcfefa7c252419e875
+Build description path: /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/XCBuildData/3cfa83d3f3ced2bcfefa7c252419e875.xcbuilddata
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk /Users/tigger/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.2-25C58-00fa09913b459cbbc988d1f6730289ae.sdkstatcache
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp/SuperscaleApp.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -o /Users/tigger/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.2-25C58-00fa09913b459cbbc988d1f6730289ae.sdkstatcache
+
+ProcessProductPackaging /Users/tigger/code/tigoss/superscale/SuperscaleApp/SuperscaleApp/Superscale.entitlements /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/Superscale.build/Superscale.app.xcent (in target 'Superscale' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    
+    Entitlements:
+    
+    {
+    "com.apple.security.app-sandbox" = 0;
+    "com.apple.security.get-task-allow" = 1;
+}
+    
+    builtin-productPackagingUtility /Users/tigger/code/tigoss/superscale/SuperscaleApp/SuperscaleApp/Superscale.entitlements -entitlements -format xml -o /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/Superscale.build/Superscale.app.xcent
+
+ProcessProductPackagingDER /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/Superscale.build/Superscale.app.xcent /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/Superscale.build/Superscale.app.xcent.der (in target 'Superscale' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    /usr/bin/derq query -f xml -i /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/Superscale.build/Superscale.app.xcent -o /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/Superscale.build/Superscale.app.xcent.der --raw
+
+ProcessProductPackaging "" /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/SuperscaleAppUITests.xctest.xcent (in target 'SuperscaleAppUITests' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    
+    Entitlements:
+    
+    {
+    "com.apple.application-identifier" = "com.tadgpaul.superscale.uitests.xctrunner";
+    "com.apple.security.app-sandbox" = 1;
+    "com.apple.security.get-task-allow" = 1;
+    "com.apple.security.network.client" = 1;
+    "com.apple.security.temporary-exception.files.absolute-path.read-only" =     (
+        "/"
+    );
+    "com.apple.security.temporary-exception.mach-lookup.global-name" =     (
+        "com.apple.testmanagerd",
+        "com.apple.dt.testmanagerd.runner",
+        "com.apple.coresymbolicationd",
+        "com.apple.coredevice.version",
+        "com.apple.coredevice.service",
+        "com.apple.remoted"
+    );
+    "com.apple.security.temporary-exception.mach-lookup.local-name" =     (
+        "com.apple.axserver"
+    );
+    "com.apple.security.temporary-exception.sbpl" =     (
+        "(allow hid-control)",
+        "(allow signal)"
+    );
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/SuperscaleAppUITests.xctest.xcent
+
+ProcessInfoPlistFile /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app/Contents/Info.plist /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/Superscale.build/empty-Superscale.plist (in target 'Superscale' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    builtin-infoPlistUtility /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/Superscale.build/empty-Superscale.plist -producttype com.apple.product-type.application -genpkginfo /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/Superscale.build/assetcatalog_generated_info.plist -o /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app/Contents/Info.plist
+
+CopySwiftLibs /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app (in target 'Superscale' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    builtin-swiftStdLibTool --copy --verbose --sign 8193A44FF2E75A03B7284AFB01ABCA7E51E288E7 --scan-executable /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app/Contents/MacOS/Superscale.debug.dylib --scan-folder /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app/Contents/Frameworks --scan-folder /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app/Contents/PlugIns --scan-folder /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app/Contents/Library/SystemExtensions --scan-folder /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app/Contents/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/Superscale.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+ProcessProductPackagingDER /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/SuperscaleAppUITests.xctest.xcent /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/SuperscaleAppUITests.xctest.xcent.der (in target 'SuperscaleAppUITests' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    /usr/bin/derq query -f xml -i /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/SuperscaleAppUITests.xctest.xcent -o /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/SuperscaleAppUITests.xctest.xcent.der --raw
+
+CodeSign /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app (in target 'Superscale' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    
+    Signing Identity:     "Apple Development: hello@tigger.dev (6P78LD67B5)"
+    
+    /usr/bin/codesign --force --sign 8193A44FF2E75A03B7284AFB01ABCA7E51E288E7 --entitlements /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/Superscale.build/Superscale.app.xcent --timestamp\=none --generate-entitlement-der /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app
+/Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app: replacing existing signature
+
+Validate /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app (in target 'Superscale' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    builtin-validationUtility /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app -no-validate-extension -infoplist-subpath Contents/Info.plist
+
+RegisterWithLaunchServices /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app (in target 'Superscale' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -f -R -trusted /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/Superscale.app
+
+ProcessInfoPlistFile /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest/Contents/Info.plist /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/empty-SuperscaleAppUITests.plist (in target 'SuperscaleAppUITests' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    builtin-infoPlistUtility /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/empty-SuperscaleAppUITests.plist -producttype com.apple.product-type.bundle.ui-testing -expandbuildsettings -platform macosx -additionalcontentfile /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/ProductTypeInfoPlistAdditions.plist -o /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest/Contents/Info.plist
+
+Ld /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest/Contents/MacOS/SuperscaleAppUITests normal (in target 'SuperscaleAppUITests' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos14.0 -bundle -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -Os -L/Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -L/Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F/Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -F/Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug -iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -filelist /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/Objects-normal/arm64/SuperscaleAppUITests.LinkFileList -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @loader_path/../Frameworks -Xlinker -object_path_lto -Xlinker /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/Objects-normal/arm64/SuperscaleAppUITests_lto.o -rdynamic -Xlinker -dependency_info -Xlinker /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/Objects-normal/arm64/SuperscaleAppUITests_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/Objects-normal/arm64/SuperscaleAppUITests.swiftmodule @/Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/Objects-normal/arm64/SuperscaleAppUITests-linker-args.resp -Xlinker -needed_framework -Xlinker XCTest -framework XCTest -Xlinker -needed-lXCTestSwiftSupport -lXCTestSwiftSupport -Xlinker -no_adhoc_codesign -o /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest/Contents/MacOS/SuperscaleAppUITests
+
+ExtractAppIntentsMetadata (in target 'SuperscaleAppUITests' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name SuperscaleAppUITests --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk --xcode-version 17C529 --platform-family macOS --deployment-target 14.0 --bundle-identifier com.tadgpaul.superscale.uitests --output /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest/Contents/Resources --target-triple arm64-apple-macos14.0 --binary-file /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest/Contents/MacOS/SuperscaleAppUITests --dependency-file /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/Objects-normal/arm64/SuperscaleAppUITests_dependency_info.dat --stringsdata-file /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/Objects-normal/arm64/SuperscaleAppUITests.SwiftFileList --metadata-file-list /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/SuperscaleAppUITests.DependencyMetadataFileList --static-metadata-file-list /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/SuperscaleAppUITests.DependencyStaticMetadataFileList --swift-const-vals-list /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/Objects-normal/arm64/SuperscaleAppUITests.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
+2026-03-31 10:32:44.143 appintentsmetadataprocessor[2192:41899723] Starting appintentsmetadataprocessor export
+2026-03-31 10:32:44.144 appintentsmetadataprocessor[2192:41899723] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
+
+CopySwiftLibs /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest (in target 'SuperscaleAppUITests' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest/Contents/MacOS/SuperscaleAppUITests --scan-folder /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest/Contents/Frameworks --scan-folder /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest/Contents/PlugIns --scan-folder /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest/Contents/Library/SystemExtensions --scan-folder /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest/Contents/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+CodeSign /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest (in target 'SuperscaleAppUITests' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/SuperscaleAppUITests.xctest.xcent --timestamp\=none --generate-entitlement-der /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app/Contents/PlugIns/SuperscaleAppUITests.xctest
+
+CodeSign /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app (in target 'SuperscaleAppUITests' from project 'SuperscaleApp')
+    cd /Users/tigger/code/tigoss/superscale/SuperscaleApp
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Intermediates.noindex/SuperscaleApp.build/Debug/SuperscaleAppUITests.build/SuperscaleAppUITests.xctest.xcent --timestamp\=none --generate-entitlement-der /Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app
+/Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Build/Products/Debug/SuperscaleAppUITests-Runner.app: replacing existing signature
+
+2026-03-31 10:32:45.012959+0100 SuperscaleAppUITests-Runner[2199:41899811] [Default] Running tests...
+Test Suite 'All tests' started at 2026-03-31 10:32:45.186.
+Test Suite 'SuperscaleAppUITests.xctest' started at 2026-03-31 10:32:45.186.
+Test Suite 'SuperscaleAppUITests' started at 2026-03-31 10:32:45.186.
+Test Case '-[SuperscaleAppUITests.SuperscaleAppUITests test_accessibility_identifiers_RT106]' started.
+    t =     0.00s Start Test at 2026-03-31 10:32:45.187
+    t =     0.16s Set Up
+    t =     0.16s     Open com.tadgpaul.superscale
+    t =     0.16s         Launch com.tadgpaul.superscale
+    t =     0.43s             Wait for accessibility to load
+    t =     0.77s             Setting up automation session
+    t =     0.79s             Wait for com.tadgpaul.superscale to idle
+    t =     0.79s Waiting 5.0s for "dropTarget" StaticText to exist
+    t =     1.83s     Checking `Expect predicate `existsNoRetry == 1` for object "dropTarget" StaticText`
+    t =     1.83s         Checking existence of `"dropTarget" StaticText`
+    t =     2.16s Checking existence of `"modelPicker" Button`
+    t =     2.19s Tear Down
+Test Case '-[SuperscaleAppUITests.SuperscaleAppUITests test_accessibility_identifiers_RT106]' passed (2.447 seconds).
+Test Case '-[SuperscaleAppUITests.SuperscaleAppUITests test_drop_target_visible_on_launch_RT107]' started.
+    t =     0.00s Start Test at 2026-03-31 10:32:47.636
+    t =     0.18s Set Up
+    t =     0.18s     Open com.tadgpaul.superscale
+    t =     0.18s         Launch com.tadgpaul.superscale
+    t =     0.18s             Terminate com.tadgpaul.superscale:2200
+    t =     1.52s             Wait for accessibility to load
+    t =     1.79s             Setting up automation session
+    t =     1.80s             Wait for com.tadgpaul.superscale to idle
+    t =     1.80s Waiting 5.0s for "dropTarget" StaticText to exist
+    t =     2.84s     Checking `Expect predicate `existsNoRetry == 1` for object "dropTarget" StaticText`
+    t =     2.84s         Checking existence of `"dropTarget" StaticText`
+    t =     3.06s Tear Down
+Test Case '-[SuperscaleAppUITests.SuperscaleAppUITests test_drop_target_visible_on_launch_RT107]' passed (3.331 seconds).
+Test Case '-[SuperscaleAppUITests.SuperscaleAppUITests test_model_picker_exists_RT108]' started.
+    t =     0.00s Start Test at 2026-03-31 10:32:50.968
+    t =     0.16s Set Up
+    t =     0.16s     Open com.tadgpaul.superscale
+    t =     0.16s         Launch com.tadgpaul.superscale
+    t =     0.16s             Terminate com.tadgpaul.superscale:2203
+    t =     1.42s             Wait for accessibility to load
+    t =     1.67s             Setting up automation session
+    t =     1.68s             Wait for com.tadgpaul.superscale to idle
+    t =     1.69s Checking existence of `Button (First Match)`
+    t =     1.74s Tear Down
+Test Case '-[SuperscaleAppUITests.SuperscaleAppUITests test_model_picker_exists_RT108]' passed (1.999 seconds).
+Test Case '-[SuperscaleAppUITests.SuperscaleAppUITests test_scale_buttons_present_RT109]' started.
+    t =     0.00s Start Test at 2026-03-31 10:32:52.967
+    t =     0.18s Set Up
+    t =     0.18s     Open com.tadgpaul.superscale
+    t =     0.18s         Launch com.tadgpaul.superscale
+    t =     0.18s             Terminate com.tadgpaul.superscale:2206
+    t =     1.44s             Wait for accessibility to load
+    t =     1.69s             Setting up automation session
+    t =     1.70s             Wait for com.tadgpaul.superscale to idle
+    t =     1.71s Waiting 5.0s for "scale2x" Button to exist
+    t =     2.74s     Checking `Expect predicate `existsNoRetry == 1` for object "scale2x" Button`
+    t =     2.74s         Checking existence of `"scale2x" Button`
+    t =     3.05s Checking existence of `"scale4x" Button`
+    t =     3.09s Checking existence of `"scale8x" Button`
+    t =     3.12s Checking existence of `"scaleCustom" Button`
+    t =     3.15s Tear Down
+Test Case '-[SuperscaleAppUITests.SuperscaleAppUITests test_scale_buttons_present_RT109]' passed (3.442 seconds).
+Test Suite 'SuperscaleAppUITests' passed at 2026-03-31 10:32:56.410.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 11.220 (11.224) seconds
+Test Suite 'SuperscaleAppUITests.xctest' passed at 2026-03-31 10:32:56.412.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 11.220 (11.225) seconds
+Test Suite 'All tests' passed at 2026-03-31 10:32:56.413.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 11.220 (11.227) seconds
+2026-03-31 10:33:18.418 xcodebuild[2122:41899173] [MT] IDETestOperationsObserverDebug: 34.235 elapsed -- Testing started completed.
+2026-03-31 10:33:18.418 xcodebuild[2122:41899173] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-03-31 10:33:18.418 xcodebuild[2122:41899173] [MT] IDETestOperationsObserverDebug: 34.235 sec, +34.235 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tigger/Library/Developer/Xcode/DerivedData/SuperscaleApp-bsddtjshpgkmtkfuhroswcrizfnb/Logs/Test/Test-SuperscaleWithTests-2026.03.31_10-32-41-+0100.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started
